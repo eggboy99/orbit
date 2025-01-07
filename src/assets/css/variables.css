@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap');
 :root {
     /* Background Colors */
-    --bg-color: "#F0EFEB";
-    --secondary-bg-color: "#222222";
+    --bg-color: #F0EFEB;
+    --secondary-bg-color: #222222;
 
     /* Button Colors */
-    --light-blue: "6096BA";
-    --dark-blue: "#545F71";
-    --green: "#5B8E7D";
-    --yellow: "#FCBF49";
-    --orange: "#E07A5F";
+    --light-blue: #6096BA;
+    --dark-blue: #545F71;
+    --green: #5B8E7D;
+    --yellow: #FCBF49;
+    --orange: #E07A5F;
 
 
     /* Font Variables */
@@ -18,15 +18,15 @@
     --font-medium: 500;
     --font-semibold: 600;
     --font-bold: 700;
-    --font-size--base: 1rem;
+    --font-size-base: 1rem;
     --font-size-xxs: 0.688rem;
-    --font-size-xs: 0.5rem;
+    --font-size-xs: 0.8rem;
     --font-size-s: 1.25rem;
     --font-size-m: 1.563rem;
     --font-size-l: 2rem;
-    --font-size--xl: 2.75rem;
-    --font-size--xxl: 3.75rem;
-    --font-white: "#F0EFEB";
-    --font-black: "#222222";
+    --font-size-xl: 2.75rem;
+    --font-size-xxl: 3.75rem;
+    --font-white: #F0EFEB;
+    --font-black: #222222;
 
 }
