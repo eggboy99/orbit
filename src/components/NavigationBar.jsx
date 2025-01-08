@@ -1,14 +1,15 @@
-import { useState } from "react";
 import styles from "../assets/css/NavigationBar.module.css";
 import brandLogo from "../assets/images/brand-logo.png";
 import { Link } from "react-router-dom";
+import MobileMenuContext from "../context/MobileMenuContext";
+import { useContext } from "react";
 
 const NavigationBar = () => {
-  const [isActive, setIsActive] = useState(false);
-
+  const { isActive, setIsActive } = useContext(MobileMenuContext);
   const toggleMenu = () => {
     setIsActive((prevState) => !prevState);
   };
+
   return (
     <>
       <div

@@ -1,32 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Gabarito:wght@400..900&display=swap");
 :root {
-    /* Background Colors */
-    --bg-color: #F0EFEB;
-    --secondary-bg-color: #222222;
+  /* Background Colors */
+  --bg-color: #f0efeb;
+  --secondary-bg-color: #222222;
 
-    /* Button Colors */
-    --light-blue: #6096BA;
-    --dark-blue: #545F71;
-    --green: #5B8E7D;
-    --yellow: #FCBF49;
-    --orange: #E07A5F;
+  /* Button Colors */
+  --light-blue: #6096ba;
+  --dark-blue: #545f71;
+  --green: #5b8e7d;
+  --yellow: #fcbf49;
+  --orange: #e07a5f;
 
-
-    /* Font Variables */
-    --font: "Afacad", "sans-serif";
-    --font-regular: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-    --font-size-base: 1rem;
-    --font-size-xxs: 0.688rem;
-    --font-size-xs: 0.8rem;
-    --font-size-s: 1.25rem;
-    --font-size-m: 1.563rem;
-    --font-size-l: 2rem;
-    --font-size-xl: 2.75rem;
-    --font-size-xxl: 3.75rem;
-    --font-white: #F0EFEB;
-    --font-black: #222222;
-
+  /* Font Variables */
+  --font: "Afacad", "sans-serif";
+  --font-Gabarito: "Gabarito", "sans-serif";
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-size-base: 1rem;
+  --font-size-xxs: 0.688rem;
+  --font-size-xs: 0.8rem;
+  --font-size-s: 1.25rem;
+  --font-size-m: 1.563rem;
+  --font-size-l: 2rem;
+  --font-size-xl: 2.75rem;
+  --font-size-xxl: 3.75rem;
+  --font-white: #f0efeb;
+  --font-black: #222222;
 }
