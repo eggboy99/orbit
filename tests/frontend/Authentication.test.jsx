@@ -1,7 +1,5 @@
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import Authentication from "../../src/pages/Authentication";
-import Form from "../../src/components/LoginForm";
-import RegisterForm from "../../src/components/RegisterForm";
 import userEvent from "@testing-library/user-event";
 import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
 

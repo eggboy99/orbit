@@ -3,16 +3,15 @@ import PropTypes from "prop-types";
 
 const ImageUploadForm = ({ setImage, id, register }) => {
   const handleImageChange = (event) => {
-    const file = event.target.files[0]; // Selects the uploaded image
+    const file = event.target.files[0]; // Get the first file of the input element
     if (!file) return;
 
-    const reader = new FileReader(); // instantiate a new file reader
+    const reader = new FileReader(); // Create a new File Reader
 
-    reader.readAsDataURL(file); // Tells the FileReader to read the file as Base64-encoded data URL
+    reader.readAsDataURL(file); // Read the file as a base64 encoded string
 
-    // onloadend is an event handler that gets triggered when the file has been completely read
     reader.onloadend = () => {
-      setImage(reader.result);
+      setImage(reader.result); // Set the image when the file has been read
     };
   };
 
@@ -26,6 +25,7 @@ const ImageUploadForm = ({ setImage, id, register }) => {
       onChange={handleImageChange}
       className={styles.imageUpload}
       id={id}
+      data-testid="imageInput"
     />
   );
 };
