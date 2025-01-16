@@ -18,6 +18,7 @@ const CountryCodeSelector = ({ countryCode, setCountryCode }) => {
   return (
     <>
       <div
+        data-testid="countryCodeInput"
         className={styles.selectCountryCodeBtn}
         onClick={() => toggleDropDown()}
       >
@@ -28,10 +29,15 @@ const CountryCodeSelector = ({ countryCode, setCountryCode }) => {
         className={`${styles.countryCodesContainer} ${
           isOpen ? styles.open : ""
         }`}
+        data-testid="countryCodes"
       >
         <ul>
           {countryPhoneCodes.map((country, index) => (
-            <li key={index} onClick={() => selectOption(country.code)}>
+            <li
+              key={index}
+              data-testid="countryCode"
+              onClick={() => selectOption(country.code)}
+            >
               {country.code}
             </li>
           ))}
