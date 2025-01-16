@@ -80,7 +80,7 @@ const NavigationBar = () => {
         </li>
         <li>
           <Link
-            to="/login"
+            to="/authentication"
             className={styles.link}
             data-testid="login-navigator"
           >

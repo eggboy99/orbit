@@ -11,7 +11,7 @@ const navigationOptions = [
   { name: "orbit", path: "/", testId: "home-navigator" },
   { name: "Social Feed", path: "/news-feed", testId: "newsfeed-navigator" },
   { name: "Articles", path: "/articles", testId: "articles-navigator" },
-  { name: "Login", path: "/login", testId: "login-navigator" },
+  { name: "Login", path: "/authentication", testId: "login-navigator" },
 ];
 
 describe("Navigation Bar", () => {

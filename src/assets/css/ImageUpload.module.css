@@ -1,0 +1,10 @@
+.imageUpload {
+  display: none;
+}
+
+.errorMessage {
+  align-self: flex-start;
+  padding-left: 25px;
+  font-size: var(--font-size-s);
+  color: #941b0c;
+}

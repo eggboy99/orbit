@@ -1,0 +1,42 @@
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import Authentication from "../../src/pages/Authentication";
+import Form from "../../src/components/LoginForm";
+import RegisterForm from "../../src/components/RegisterForm";
+import userEvent from "@testing-library/user-event";
+import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
+
+describe("Authentication Page", () => {
+  it("should not dispay the toggle form checkbox input to the user", () => {
+    render(
+      <MobileMenuContextProvider>
+        <MemoryRouter>
+          <Authentication />
+        </MemoryRouter>
+      </MobileMenuContextProvider>
+    );
+    const formToggle = screen.getByTestId("formToggleButton");
+    const inputElement = within(formToggle).queryByRole("checkbox");
+    expect(inputElement).toBeNull(); // checkbox should not be displayed
+  });
+
+  it("should be able to toggle between sign in and registration form", async () => {
+    render(
+      <MobileMenuContextProvider>
+        <MemoryRouter>
+          <Authentication />
+        </MemoryRouter>
+      </MobileMenuContextProvider>
+    );
+    const formToggle = screen.getByTestId("formToggleButton");
+
+    // Toggle the registration form component
+    await userEvent.click(formToggle);
+    const registerForm = screen.getByTestId("registrationForm");
+    expect(registerForm).toBeInTheDocument();
+
+    // Toggle the login form component
+    await userEvent.click(formToggle);
+    const loginForm = screen.getByTestId("loginForm");
+    expect(loginForm).toBeInTheDocument();
+  });
+});

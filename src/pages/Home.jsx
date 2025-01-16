@@ -48,7 +48,7 @@ const Home = () => {
                 Donate what you no longer need and find <br />
                 what you do.
               </h2>
-              <Link to="/register">
+              <Link to="/authentication">
                 <button className={styles.getStartedBtn}>Get started</button>
               </Link>
             </div>

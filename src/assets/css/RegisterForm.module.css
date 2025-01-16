@@ -1,0 +1,312 @@
+form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 50px;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.formInputsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  gap: 10px;
+}
+
+.formInputContainer {
+  width: 100%;
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  position: relative;
+}
+
+.formInput {
+  width: 100%;
+  font-size: var(--font-size-s);
+  padding: 0.5em 0 0.5em 2em;
+  border-radius: 0.3em;
+  background-color: hsla(204, 39%, 59%, 0.2);
+  border: none;
+}
+
+.formMobileNumberInput {
+  width: 100%;
+  font-size: var(--font-size-s);
+  padding: 0.5em 0 0.5em 5em;
+  border-radius: 0.3em;
+  background-color: hsla(204, 39%, 59%, 0.2);
+  border: none;
+}
+
+.errorMessage {
+  align-self: flex-start;
+  padding-left: 25px;
+  font-size: var(--font-size-s);
+  color: #941b0c;
+}
+
+.formInputContainer input::placeholder {
+  font-family: var(--font);
+  font-weight: 300;
+  opacity: 50%;
+}
+
+input[type="text"] {
+  opacity: 80%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.formInputContainer img {
+  width: 24px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  position: relative;
+  top: 25px;
+  left: 45px;
+  opacity: 70%;
+}
+
+.imageUploadForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.imageUploadForm .errorMessage {
+  padding: 0;
+}
+
+.imagePlaceHolder {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  border: #353535 2px solid;
+  background-color: #fafafa;
+}
+
+.imageUploadLabel {
+  padding: 10px 20px;
+  background-color: var(--dark-blue);
+  color: #fff;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.2s ease-in;
+}
+
+.imageUploadLabel:hover {
+  background-color: #373e4a;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 40%;
+}
+
+.buttonsContainer button {
+  width: 100%;
+  font-family: var(--font-Gabarito);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-s);
+  padding: 0.5em;
+  border: none;
+  color: var(--font-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 2px 2px 3px var(--font-black);
+}
+
+.buttonsContainer button:first-child {
+  background-color: var(--dark-blue);
+  transition: background-color 0.2s ease-in;
+}
+
+.buttonsContainer button:nth-child(2) {
+  background-color: #353535;
+  transition: background-color 0.2s ease-in;
+}
+
+.buttonsContainer button:first-child:hover {
+  background-color: #373e4a;
+}
+
+.buttonsContainer button:nth-child(2):hover {
+  background-color: #191919;
+}
+
+@media (max-width: 820px) {
+  .container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    flex-flow: column-reverse;
+    margin-top: 30px;
+  }
+  .formInputsContainer {
+    width: 80%;
+  }
+
+  .formInputContainer {
+    width: 100%;
+  }
+
+  .imagePlaceHolder {
+    width: 150px;
+    height: 150px;
+  }
+
+  .buttonsContainer {
+    width: 70%;
+  }
+
+  .buttonsContainer button {
+    width: 100%;
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 550px) and (max-height: 950px) {
+  form {
+    gap: 30px;
+  }
+  .container {
+    gap: 20px;
+    width: 100%;
+  }
+  .formInputsContainer {
+    width: 100%;
+  }
+
+  .formInputContainer {
+    width: 100%;
+    position: relative;
+  }
+
+  .imagePlaceHolder {
+    width: 100px;
+    height: 100px;
+  }
+
+  .formInputContainer input {
+    width: 100%;
+    font-size: var(--font-size-base);
+  }
+
+  .errorMessage {
+    padding-left: 0;
+    font-size: var(--font-size-base);
+  }
+
+  .formInputContainer img {
+    width: 16px;
+    height: auto;
+    position: absolute;
+    left: 17px;
+    top: 50%;
+  }
+
+  .imageUploadLabel {
+    font-size: var(--font-size-base);
+  }
+
+  .buttonsContainer {
+    width: 100%;
+    align-items: center;
+  }
+
+  .buttonsContainer button {
+    width: 80%;
+    font-size: var(--font-size-xs);
+  }
+
+  .buttonsContainer button img {
+    width: 16px;
+    height: auto;
+  }
+}
+
+@media (max-width: 950px) and (max-height: 550px) {
+  .container {
+    flex-direction: row;
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  .formInputsContainer {
+    margin-top: 20px;
+  }
+
+  .formInputContainer {
+    position: relative;
+    width: 80%;
+  }
+  .formInputContainer input {
+    font-size: var(--font-size-base);
+    width: 100%;
+  }
+
+  .errorMessage {
+    padding-left: 0;
+    padding-left: 45px;
+    font-size: var(--font-size-base);
+  }
+
+  .formInputContainer img {
+    width: 16px;
+    height: auto;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+  }
+
+  .buttonsContainer button {
+    font-size: var(--font-size-base);
+  }
+
+  .buttonsContainer img {
+    width: 16px;
+    height: auto;
+  }
+
+  .imagePlaceHolder {
+    width: 100px;
+    height: 100px;
+  }
+
+  .imageUploadLabel {
+    font-size: var(--font-size-base);
+  }
+
+  .imageUploadForm p {
+    font-size: var(--font-size-xs);
+  }
+}

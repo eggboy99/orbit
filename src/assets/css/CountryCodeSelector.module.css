@@ -1,0 +1,95 @@
+.countryCodesContainer {
+  font-size: var(--font-size-s);
+  font-weight: 500;
+  background: none;
+  text-align: center;
+  height: 150px;
+  background-color: #fafafa;
+  position: absolute;
+  left: 30px;
+  top: 60px;
+  overflow-y: scroll;
+  display: none;
+}
+
+.countryCodesContainer.open {
+  display: flex;
+}
+
+.countryCodesContainer ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.countryCodesContainer ul li {
+  color: var(--font-black);
+  padding: 0.5em 1em;
+  cursor: default;
+}
+
+.countryCodesContainer ul li:hover {
+  background-color: var(--yellow);
+}
+
+.selectCountryCodeBtn {
+  font-size: var(--font-size-s);
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  left: 65px;
+  transition: background-color 0.2s ease-in;
+}
+
+.selectCountryCodeBtn:hover {
+  background-color: hsla(204, 31%, 53%, 0.25);
+  cursor: default;
+}
+
+.selectCountryCodeBtn img {
+  width: auto;
+  position: static;
+  transform: translate(0, 0);
+}
+
+@media (max-width: 550px) and (max-height: 950px) {
+  .selectCountryCodeBtn {
+    font-size: var(--font-size-xs);
+    left: 40px;
+  }
+  .countryCodesContainer ul li {
+    font-size: var(--font-size-xs);
+  }
+  .selectCountryCodeBtn img {
+    width: 16px;
+    height: auto;
+  }
+  .countryCodesContainer {
+    left: 10px;
+  }
+}
+
+@media (max-width: 950px) and (max-height: 550px) {
+  .selectCountryCodeBtn {
+    font-size: var(--font-size-xs);
+    left: 30px;
+  }
+
+  .selectCountryCodeBtn img {
+    width: 16px;
+    height: auto;
+  }
+
+  .countryCodesContainer {
+    left: 10px;
+  }
+
+  .countryCodesContainer ul li {
+    font-size: var(--font-size-xs);
+  }
+}

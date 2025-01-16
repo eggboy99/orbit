@@ -29,7 +29,7 @@ describe("Get Started Button", () => {
         <MemoryRouter>
           <Home />
           <Routes>
-            <Route path="/register" element={<PathnameDisplay />} />
+            <Route path="/authentication" element={<PathnameDisplay />} />
           </Routes>
         </MemoryRouter>
       </MobileMenuContextProvider>
@@ -39,6 +39,8 @@ describe("Get Started Button", () => {
     expect(button).toBeInTheDocument();
 
     await userEvent.click(button);
-    expect(screen.getByTestId("current-path")).toHaveTextContent(/register/i);
+    expect(screen.getByTestId("current-path")).toHaveTextContent(
+      /authentication/i
+    );
   });
 });
