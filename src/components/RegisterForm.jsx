@@ -12,17 +12,22 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
   const [image, setImage] = useState(null);
   const [countryCode, setCountryCode] = useState("+65");
 
+  // When the file input exceed the file size requirement, users will be shown the fileError message.
+  const [fileError, setFileError] = useState("");
+
   // React Hook Form Utiities
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onSubmit = async (data) => {
     data.mobileNumber = [...countryCode, ...data.mobileNumber].join("");
     data.image = image;
+    console.log(errors.confirmPassword);
     const response = await fetch("http://localhost:3000/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,7 +35,13 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
     });
 
     const result = await response.json();
-    console.log(result);
+    // The server returns validation errors that alert users on if their registration details are already in use
+    if (result.success === false && result.key) {
+      setError(result.key, {
+        type: "server",
+        message: result.message,
+      });
+    }
   };
 
   return (
@@ -89,6 +100,7 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
             setImage={setImage}
             register={register}
             errors={errors}
+            setFileError={setFileError}
           />
           {/* The label here is for the input type in the ImageUploadForm component. The file input type in that component is hidden and so the label is used 
           as the input button. */}
@@ -96,9 +108,10 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
             Upload your profile image
           </label>
           <p>Files Supported: PNG, JPG, JPEG</p>
-          {errors.image && (
+          {(errors.image && (
             <p className={styles.errorMessage}>{errors.image.message}</p>
-          )}
+          )) ||
+            (fileError && <p className={styles.errorMessage}>{fileError}</p>)}
         </div>
       </div>
 

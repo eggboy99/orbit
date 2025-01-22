@@ -1,25 +1,46 @@
 import { render } from "@testing-library/react";
 import ImageUploadForm from "../../src/components/ImageUploadForm";
 import userEvent from "@testing-library/user-event";
+import { useForm } from "react-hook-form";
+
+// Mocking the react-hook-form module
+vi.mock("react-hook-form", () => ({
+  // Creating a mock version of the useForm hook
+  useForm: () => ({
+    register: vi.fn((name) => ({
+      name,
+      onChange: vi.fn(),
+      onBlur: vi.fn(),
+      ref: vi.fn(),
+    })),
+    handleSubmit: vi.fn((cb) => cb),
+    formState: {
+      errors: {},
+    },
+    getValues: vi.fn(),
+    setValue: vi.fn(),
+  }),
+}));
 
 describe("Image Upload Form", () => {
   const mockSetImage = vi.fn();
-  const mockRegister = vi.fn();
+  const mockSetFileError = vi.fn();
+  const { register } = useForm();
 
   const renderImageUpload = () => {
     return render(
       <ImageUploadForm
         setImage={mockSetImage}
         id="profileImage"
-        register={mockRegister}
+        register={register}
+        setFileError={mockSetFileError}
       />
     );
   };
 
   // Reset all mocks before each test case
   beforeEach(() => {
-    mockSetImage.mockReset();
-    mockRegister.mockReset();
+    vi.clearAllMocks();
   });
 
   it("should render the file input with correct attributes", () => {
@@ -34,8 +55,9 @@ describe("Image Upload Form", () => {
 
   it("should call register with correct parameters", () => {
     renderImageUpload();
-    expect(mockRegister).toHaveBeenCalledWith("image", {
-      required: "Profile Image is required",
+    expect(register).toHaveBeenCalledWith("image", {
+      required: "Profile image is required",
+      validate: expect.any(Function),
     });
   });
 
@@ -58,8 +80,8 @@ describe("Image Upload Form", () => {
 
     const fileInput = screen.getByTestId("imageInput");
     await userEvent.upload(fileInput, file);
-    mockFileReader.onloadend();
 
+    mockFileReader.onloadend();
     expect(mockSetImage).toHaveBeenCalledWith(mockFileReader.result);
   });
 });

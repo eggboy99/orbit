@@ -5,7 +5,9 @@ export const CreateUserValidationSchema = [
     body('email')
         .notEmpty().withMessage('Email address is required')
         .isEmail().withMessage('Invalid email format')
-        .normalizeEmail(),
+        .normalizeEmail(
+            { gmail_remove_dots: false, } // Prevent normalization from removing . symbol before @
+        ),
 
     // Password Validation
     body('password')
@@ -42,6 +44,41 @@ export const CreateUserValidationSchema = [
                 throw new Error('Mobile numer must be between 8 and 15 digits');
             }
             return true;
+        }),
+
+    // Image validation
+    body('image')
+        .notEmpty().withMessage("Profile image is required")
+        .custom((value) => {
+            // Check if it is a valid base65 image string
+            if (!value.startsWith('data:image/')) {
+                throw new Error('Invalid image format.');
+            }
+
+            // Extract the image type and base64 data
+            const [header, base64Data] = value.split(',');
+            const allowedTypes = ['jpeg', 'jpg', 'png'];
+            const imageType = header.split('/')[1].split(';')[0].toLowerCase();
+
+            if (!allowedTypes.includes(imageType)) {
+                throw new Error('Only JPEG, JPG, and PNG images are allowed');
+            }
+
+            if (!base64Data) {
+                throw new Error("Invalid image data");
+            }
+
+            // Check file size
+            const sizeInBytes = Buffer.from(base64Data, 'base64').length;
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+
+            if (sizeInBytes > maxSize) {
+                throw new Error("Image size must not exceed 5MB");
+            }
+
+            // Pass all the validation requirements
+            return true;
         })
+
 
 ]
