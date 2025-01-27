@@ -4,6 +4,7 @@ import App from "../../src/App";
 import userEvent from "@testing-library/user-event";
 import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
 import PathnameDisplay from "../utils/PathnameDisplay";
+import { AuthenticationContextProvider } from "../../src/context/AuthenticationContext";
 
 const navigationOptions = [
   { name: "Explore", path: "/explore", testId: "explore-navigator" },
@@ -17,11 +18,13 @@ const navigationOptions = [
 describe("Navigation Bar", () => {
   it("should render 6 navigation options: Explore, Community, Brand, Social Feed, Articles and a Login button", () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <NavigationBar />
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <NavigationBar />
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
 
     navigationOptions.forEach((option) => {
@@ -38,20 +41,22 @@ describe("Navigation Bar", () => {
 
   it("navigates to the correct page when a navigation option is clicked", async () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <App />
-          <Routes>
-            {navigationOptions.map((option) => (
-              <Route
-                key={option.name}
-                path={option.path}
-                element={<PathnameDisplay />}
-              />
-            ))}
-          </Routes>
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <App />
+            <Routes>
+              {navigationOptions.map((option) => (
+                <Route
+                  key={option.name}
+                  path={option.path}
+                  element={<PathnameDisplay />}
+                />
+              ))}
+            </Routes>
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
 
     // Simulate navigation and check the pathname
@@ -64,11 +69,13 @@ describe("Navigation Bar", () => {
 
   it("should display side menu when the hamburger menu icon is clicked", async () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <NavigationBar />
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <NavigationBar />
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
 
     const hamburgerMenu = screen.getByTestId("hamburger-menu");
@@ -85,11 +92,13 @@ describe("Navigation Bar", () => {
 
   it("should have the navigation options highlighted when user hovered over them", async () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <NavigationBar />
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <NavigationBar />
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
 
     navigationOptions.forEach(async (option) => {

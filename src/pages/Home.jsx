@@ -4,11 +4,19 @@ import sharingIllustration from "../assets/images/people-sharing.png";
 import upcycling from "../assets/images/upcycling-illustration.png";
 import tree from "../assets/images/tree.png";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import MobileMenuContext from "../context/MobileMenuContext";
+import AuthenticationContext from "../context/AuthenticationContext";
 
 const Home = () => {
   const { isActive } = useContext(MobileMenuContext);
+  const { isAuthenticated, checkAuthStatus } = useContext(
+    AuthenticationContext
+  );
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
   return (
     <>
@@ -48,7 +56,7 @@ const Home = () => {
                 Donate what you no longer need and find <br />
                 what you do.
               </h2>
-              <Link to="/authentication">
+              <Link to={isAuthenticated ? "/explore" : "/authentication"}>
                 <button className={styles.getStartedBtn}>Get started</button>
               </Link>
             </div>

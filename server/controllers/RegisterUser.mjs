@@ -3,7 +3,7 @@ import { gfs, uploadImage } from "../config/gridfs-setup.mjs";
 
 export const RegisterUser = async (req, res) => {
     try {
-        const { email, password, username, mobileNumber, image } = req.body;
+        const { email, password, username, mobileNumber, image, googleId } = req.body;
         // Submitted image data comes as a base64 string and we need to convert it to binary data
         // for computers to handle. 
         const imageBuffer = Buffer.from(
@@ -19,13 +19,14 @@ export const RegisterUser = async (req, res) => {
             type: 'profile',
             username: username
         });
-
         const newUser = new User({
+            googleId,
             email,
             password,
             username,
             mobileNumber,
-            profileImage: fileId
+            profileImage: fileId,
+            authProvider: 'local',
         });
 
         // Save the user to the database
@@ -39,7 +40,8 @@ export const RegisterUser = async (req, res) => {
                 username: newUser.username,
                 mobileNumber: newUser.mobileNumber,
                 profileImage: newUser.profileImage
-            }
+            },
+            redirectTo: '/',
         });
     } catch (error) {
         if (error.code === 11000) {

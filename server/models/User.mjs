@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const UserSchema = new mongoose.Schema({
+    googleId: {
+        type: String,
+        required: false,
+        unique: true,
+    },
     email: {
         type: String,
         required: true,
@@ -9,7 +14,9 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return this.authProvider === 'local';
+        },
         minLength: 8,
         maxLength: 16,
         match: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/
@@ -24,7 +31,9 @@ const UserSchema = new mongoose.Schema({
     },
     mobileNumber: {
         type: String,
-        required: true,
+        required: function () {
+            return this.authProvider === 'local';
+        },
         unique: true,
         minLength: 8,
         maxLength: 15,
@@ -33,6 +42,11 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'images.files'
     },
+    authProvider: {
+        type: String,
+        required: true,
+        enum: ['local', 'google'],
+    }
 }, {
     timestamps: true
 })

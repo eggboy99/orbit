@@ -1,13 +1,15 @@
 import styles from "../assets/css/RegisterForm.module.css";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import ImageUploadForm from "./ImageUploadForm";
 import React from "react";
 import CountryCodeSelector from "./CountryCodeSelector";
 import RegistrationInputValidation from "../utils/RegistrationInputValidation.mjs";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import AuthenticationContext from "../context/AuthenticationContext";
 
-const RegisterForm = ({ formInputs, buttons, testId }) => {
+const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
   // We declated both of these states in this component because we need the final state values for data submission to the backend server
   const [image, setImage] = useState(null);
   const [countryCode, setCountryCode] = useState("+65");
@@ -15,19 +17,40 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
   // When the file input exceed the file size requirement, users will be shown the fileError message.
   const [fileError, setFileError] = useState("");
 
+  const navigate = useNavigate();
+
+  const { setAuthentication } = useContext(AuthenticationContext);
+
+  const handleGoogleRegister = (event) => {
+    try {
+      event.preventDefault();
+      window.location.href = "http://localhost:3000/api/auth/google/";
+    } catch (error) {
+      console.log("Google Authentication Error: ", error);
+    }
+  };
+
   // React Hook Form Utiities
   const {
     register,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors },
     setError,
   } = useForm();
 
+  if (prefillData) {
+    for (let key in prefillData) {
+      setValue(key, prefillData[key]);
+    }
+  }
+
   const onSubmit = async (data) => {
+    data.googleId = prefillData.googleId;
     data.mobileNumber = [...countryCode, ...data.mobileNumber].join("");
     data.image = image;
-    console.log(errors.confirmPassword);
+    console.log(data);
     const response = await fetch("http://localhost:3000/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,6 +64,9 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
         type: "server",
         message: result.message,
       });
+    } else {
+      setAuthentication(true);
+      navigate(result.redirectTo);
     }
   };
 
@@ -118,7 +144,11 @@ const RegisterForm = ({ formInputs, buttons, testId }) => {
       <div className={styles.buttonsContainer}>
         {buttons.map((button, index) => {
           return (
-            <button type={button.type} key={index} data-testid={button.name}>
+            <button
+              onClick={button.icon ? handleGoogleRegister : undefined}
+              type={button.type}
+              key={index}
+            >
               {button.icon ? <img src={button.icon} /> : ""}
               {button.name}
             </button>
@@ -145,6 +175,7 @@ RegisterForm.propTypes = {
     })
   ).isRequired,
   testId: PropTypes.string.isRequired,
+  prefillData: PropTypes.objectOf(PropTypes.string),
 };
 
 export default RegisterForm;

@@ -2,10 +2,12 @@ import styles from "../assets/css/NavigationBar.module.css";
 import brandLogo from "../assets/images/brand-logo.png";
 import { Link } from "react-router-dom";
 import MobileMenuContext from "../context/MobileMenuContext";
+import AuthenticationContext from "../context/AuthenticationContext";
 import { useContext } from "react";
 
 const NavigationBar = () => {
   const { isActive, setIsActive } = useContext(MobileMenuContext);
+  const { isAuthenticated } = useContext(AuthenticationContext);
   const toggleMenu = () => {
     setIsActive((prevState) => !prevState);
   };
@@ -79,13 +81,23 @@ const NavigationBar = () => {
           </Link>
         </li>
         <li>
-          <Link
-            to="/authentication"
-            className={styles.link}
-            data-testid="login-navigator"
-          >
-            <button className={styles.loginButton}>Login</button>
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className={styles.link}
+              data-testid="account-navigator"
+            >
+              <button className={styles.loginButton}>Profile</button>{" "}
+            </Link>
+          ) : (
+            <Link
+              to="/authentication"
+              className={styles.link}
+              data-testid="login-navigator"
+            >
+              <button className={styles.loginButton}>Login</button>{" "}
+            </Link>
+          )}
         </li>
       </ul>
     </>

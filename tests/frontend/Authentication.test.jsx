@@ -2,15 +2,18 @@ import { MemoryRouter } from "react-router-dom";
 import Authentication from "../../src/pages/Authentication";
 import userEvent from "@testing-library/user-event";
 import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
+import { AuthenticationContextProvider } from "../../src/context/AuthenticationContext";
 
 describe("Authentication Page", () => {
   it("should not dispay the toggle form checkbox input to the user", () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <Authentication />
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <Authentication />
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
     const formToggle = screen.getByTestId("formToggleButton");
     const inputElement = within(formToggle).queryByRole("checkbox");
@@ -19,11 +22,13 @@ describe("Authentication Page", () => {
 
   it("should be able to toggle between sign in and registration form", async () => {
     render(
-      <MobileMenuContextProvider>
-        <MemoryRouter>
-          <Authentication />
-        </MemoryRouter>
-      </MobileMenuContextProvider>
+      <AuthenticationContextProvider>
+        <MobileMenuContextProvider>
+          <MemoryRouter>
+            <Authentication />
+          </MemoryRouter>
+        </MobileMenuContextProvider>
+      </AuthenticationContextProvider>
     );
     const formToggle = screen.getByTestId("formToggleButton");
 

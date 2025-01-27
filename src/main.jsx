@@ -6,6 +6,7 @@ import "./assets/css/variables.css";
 import styles from "./assets/css/Root.module.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MobileMenuContextProvider } from "./context/MobileMenuContext.jsx";
+import { AuthenticationContextProvider } from "./context/AuthenticationContext.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -14,10 +15,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <MobileMenuContextProvider>
-      <div className={styles.container}>
-        <RouterProvider router={router} />
-      </div>
-    </MobileMenuContextProvider>
+    <AuthenticationContextProvider>
+      <MobileMenuContextProvider>
+        <div className={styles.container}>
+          <RouterProvider router={router} />
+        </div>
+      </MobileMenuContextProvider>
+    </AuthenticationContextProvider>
   </StrictMode>
 );

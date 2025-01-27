@@ -7,12 +7,16 @@ import userIcon from "../assets/images/user-icon.svg";
 import phoneIcon from "../assets/images/phone-icon.svg";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileMenuContext from "../context/MobileMenuContext";
 import { useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import AuthenticationContext from "../context/AuthenticationContext";
 
 const Authentication = () => {
   const { isActive } = useContext(MobileMenuContext);
+  const { isAuthenticated } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
 
   // Login and registration form elements are used to render the inputs of login and register form components
   const loginForm = [
@@ -81,6 +85,31 @@ const Authentication = () => {
     });
   };
 
+  const location = useLocation();
+  const [userDataFromParams, setUserDataFromParams] = useState(null);
+
+  useEffect(() => {
+    // Get the data from URL parameters
+    const params = new URLSearchParams(location.search);
+    const userData = {
+      email: params.get("email"),
+      username: params.get("username"),
+      googleId: params.get("googleId"),
+    };
+    if (userData.email || userData.username || userData.googleId) {
+      setUserDataFromParams(userData);
+      setIsRegister(true);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    // If user is authenticated, redirect them to home page
+    if (isAuthenticated) {
+      // Replace instead of push to prevent back button from working so that the stack would be reset
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <>
       <nav>
@@ -110,6 +139,7 @@ const Authentication = () => {
                     formInputs={registrationForm}
                     buttons={registerButtons}
                     testId="registrationForm"
+                    prefillData={userDataFromParams}
                   />
                 </>
               ) : (
