@@ -35,10 +35,11 @@ const Form = ({ formInputs, buttons, testId }) => {
       });
     } else if (result.success) {
       setAuthentication(true);
-      navigate(result.redirectTo);
+      navigate(result.redirectTo, { replace: true });
     }
   };
 
+  // Bring user to the google authentication page
   const handleGoogleLogin = (event) => {
     try {
       event.preventDefault();

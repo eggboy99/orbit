@@ -5,6 +5,7 @@
   padding: 3em;
   display: flex;
   flex-direction: column;
+  gap: 50px;
   justify-content: center;
   width: 50%;
   height: auto;

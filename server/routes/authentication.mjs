@@ -5,16 +5,17 @@ import { LoginUser } from '../controllers/LoginUser.mjs';
 import { isAuthenticated } from '../middleware/isAuthenticated.mjs';
 import GoogleLogin from '../controllers/GoogleLogin.mjs';
 import passport from 'passport';
+import { VerifyUser } from '../controllers/VerifyUser.mjs';
 
 const authenticationRouter = Router();
 
 authenticationRouter.post('/register', ValidateRegistrationInput, RegisterUser);
 
+authenticationRouter.post('/auth/register/verify', VerifyUser);
+
 authenticationRouter.post('/login', LoginUser);
 
 authenticationRouter.get('/auth/google', GoogleLogin);
-
-authenticationRouter.get('/auth/status', isAuthenticated);
 
 authenticationRouter.get('/auth/google/callback', (req, res, next) => {
     passport.authenticate('google', function (err, user) {
@@ -45,6 +46,6 @@ authenticationRouter.get('/auth/google/callback', (req, res, next) => {
     })(req, res, next);
 })
 
-
+authenticationRouter.get('/auth/status', isAuthenticated);
 
 export default authenticationRouter;

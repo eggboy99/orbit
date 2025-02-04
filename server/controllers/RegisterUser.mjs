@@ -1,7 +1,11 @@
 import User from "../models/User.mjs";
-import { gfs, uploadImage } from "../config/gridfs-setup.mjs";
+import OTP from "../models/OTPSchema.mjs";
+import bcrypt from "bcrypt";
+import { uploadImage } from "../config/gridfs-setup.mjs";
+import sendEmail from "./SendOTP.mjs";
 
-export const RegisterUser = async (req, res) => {
+
+export const RegisterUser = async (req, res, next) => {
     try {
         const { email, password, username, mobileNumber, image, googleId } = req.body;
         // Submitted image data comes as a base64 string and we need to convert it to binary data
@@ -29,20 +33,33 @@ export const RegisterUser = async (req, res) => {
             authProvider: 'local',
         });
 
-        // Save the user to the database
-        await newUser.save();
+        req.session.pendingUser = newUser;
+
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        await OTP.create({
+            email,
+            otp: await bcrypt.hash(otp, 10)
+        });
+
+        const subject = "Registration Email Verification";
+        const message = `Please use the following One Time Password: ${otp}. This OTP will expire in 5minutes.`
+
+        try {
+            await sendEmail({
+                recipient: email,
+                subject: subject,
+                message: message
+            });
+
+        } catch (error) {
+            console.error('Email sending failed:', error);
+        }
 
         res.status(201).json({
             success: true,
-            message: "User registered successfully",
-            user: {
-                email: newUser.email,
-                username: newUser.username,
-                mobileNumber: newUser.mobileNumber,
-                profileImage: newUser.profileImage
-            },
-            redirectTo: '/',
+            redirectTo: `/authentication/verify/${newUser._id}`,
         });
+
     } catch (error) {
         if (error.code === 11000) {
             // The key is essential for attaching the error message to the corresponding 
@@ -75,6 +92,4 @@ export const RegisterUser = async (req, res) => {
             message: "There is something wrong with the server. Please try again later."
         })
     }
-
-
 }

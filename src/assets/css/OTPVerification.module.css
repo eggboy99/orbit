@@ -1,0 +1,173 @@
+main {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 250px;
+}
+
+.headingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.headingContainer h1 {
+  font-weight: var(--font-semibold);
+}
+
+.headingContainer h2 {
+  font-size: var(--font-size-m);
+  font-weight: var(--font-regular);
+  text-align: center;
+  opacity: 70%;
+}
+
+.OTPForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 150px;
+  width: auto;
+}
+
+.OTPContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.OTPContainer p {
+  align-self: flex-end;
+}
+
+.OTPButton {
+  border: none;
+  font-weight: var(--font-medium);
+}
+
+.inputsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+}
+
+.inputsContainer input {
+  font-size: var(--font-size-l);
+  width: 150px;
+  border: none;
+  text-align: center;
+  padding: 1em 0em;
+}
+
+input:focus {
+  outline: none !important;
+  border: 1px solid var(--dark-blue);
+  box-shadow: 0 0 10px #719ece;
+}
+
+.submitBtn {
+  background-color: var(--orange);
+  font-family: var(--font-Gabarito);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-m);
+  padding: 0.5em 2em;
+  border-radius: 50px;
+  border: none;
+  color: var(--font-white);
+  box-shadow: 2px 2px 3px var(--font-black);
+  transition: background-color 0.3s ease-in;
+}
+
+.submitBtn:hover {
+  background-color: #e26846;
+}
+
+.errorMessage {
+  font-size: var(--font-size-s);
+  color: #941b0c;
+}
+
+@media (max-width: 1280px) {
+  main {
+    margin-top: 50px;
+    gap: 50px;
+  }
+}
+
+@media (max-width: 550px) and (max-height: 950px) {
+  main {
+    margin-top: 50px;
+    gap: 50px;
+  }
+  .headingContainer h1 {
+    font-size: var(--font-size-m);
+  }
+
+  .headingContainer h2 {
+    font-size: var(--font-size-base);
+  }
+
+  .OTPForm {
+    gap: 50px;
+  }
+
+  .inputsContainer input {
+    font-size: var(--font-size-m);
+    width: 50px;
+    height: 50px;
+  }
+
+  .OTPContainer p button {
+    font-size: var(--font-size-xxs);
+  }
+
+  .submitBtn {
+    font-size: var(--font-size-s);
+    padding: 0.5em 2em;
+    box-shadow: 2px 2px 3px var(--font-black);
+    transition: background-color 0.3s ease-in;
+  }
+}
+
+@media (max-width: 950px) and (max-height: 550px) {
+  main {
+    margin-top: 50px;
+    gap: 50px;
+  }
+  .headingContainer h1 {
+    font-size: var(--font-size-m);
+  }
+
+  .headingContainer h2 {
+    font-size: var(--font-size-base);
+  }
+
+  .OTPForm {
+    gap: 50px;
+  }
+
+  .inputsContainer input {
+    font-size: var(--font-size-m);
+    width: 50px;
+    height: 50px;
+  }
+
+  .OTPContainer p button {
+    font-size: var(--font-size-xxs);
+  }
+
+  .submitBtn {
+    font-size: var(--font-size-s);
+    padding: 0.5em 2em;
+    box-shadow: 2px 2px 3px var(--font-black);
+    transition: background-color 0.3s ease-in;
+    margin-bottom: 20px;
+  }
+}

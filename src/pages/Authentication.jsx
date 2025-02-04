@@ -10,13 +10,10 @@ import RegisterForm from "../components/RegisterForm";
 import { useEffect, useState } from "react";
 import MobileMenuContext from "../context/MobileMenuContext";
 import { useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import AuthenticationContext from "../context/AuthenticationContext";
+import { useLocation } from "react-router-dom";
 
 const Authentication = () => {
   const { isActive } = useContext(MobileMenuContext);
-  const { isAuthenticated } = useContext(AuthenticationContext);
-  const navigate = useNavigate();
 
   // Login and registration form elements are used to render the inputs of login and register form components
   const loginForm = [
@@ -101,14 +98,6 @@ const Authentication = () => {
       setIsRegister(true);
     }
   }, [location]);
-
-  useEffect(() => {
-    // If user is authenticated, redirect them to home page
-    if (isAuthenticated) {
-      // Replace instead of push to prevent back button from working so that the stack would be reset
-      navigate("/", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
     <>

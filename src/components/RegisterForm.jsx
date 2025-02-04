@@ -1,26 +1,26 @@
 import styles from "../assets/css/RegisterForm.module.css";
 import { useForm } from "react-hook-form";
-import { useState, useContext } from "react";
-import ImageUploadForm from "./ImageUploadForm";
+import { useState } from "react";
 import React from "react";
+import ImageUploadForm from "./ImageUploadForm";
 import CountryCodeSelector from "./CountryCodeSelector";
 import RegistrationInputValidation from "../utils/RegistrationInputValidation.mjs";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import AuthenticationContext from "../context/AuthenticationContext";
+import SpinnerLoader from "./SpinnerLoader";
 
 const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
   // We declated both of these states in this component because we need the final state values for data submission to the backend server
   const [image, setImage] = useState(null);
   const [countryCode, setCountryCode] = useState("+65");
+  const [isLoading, setIsLoading] = useState(false); // Use for the spinner loader when fetching data
 
   // When the file input exceed the file size requirement, users will be shown the fileError message.
   const [fileError, setFileError] = useState("");
 
   const navigate = useNavigate();
 
-  const { setAuthentication } = useContext(AuthenticationContext);
-
+  // Bring the user to the google authentication page
   const handleGoogleRegister = (event) => {
     try {
       event.preventDefault();
@@ -40,6 +40,8 @@ const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
     setError,
   } = useForm();
 
+  // If user register with their google account, the application retrieve the google's account information to
+  // prefill the registration form inputs
   if (prefillData) {
     for (let key in prefillData) {
       setValue(key, prefillData[key]);
@@ -47,16 +49,20 @@ const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
   }
 
   const onSubmit = async (data) => {
-    data.googleId = prefillData.googleId;
+    if (data.googleId) {
+      data.googleId = prefillData.googleId;
+    }
+
     data.mobileNumber = [...countryCode, ...data.mobileNumber].join("");
     data.image = image;
-    console.log(data);
+    setIsLoading(true);
     const response = await fetch("http://localhost:3000/api/register", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
+    setIsLoading(false);
     const result = await response.json();
     // The server returns validation errors that alert users on if their registration details are already in use
     if (result.success === false && result.key) {
@@ -65,13 +71,13 @@ const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
         message: result.message,
       });
     } else {
-      setAuthentication(true);
       navigate(result.redirectTo);
     }
   };
 
   return (
     <form data-testid={testId} action="" onSubmit={handleSubmit(onSubmit)}>
+      {isLoading ? <SpinnerLoader /> : null}
       <div className={styles.container}>
         <div className={styles.formInputsContainer}>
           {formInputs.map((element, index) => {
