@@ -113,7 +113,11 @@ const OTPVerification = () => {
             email address
           </h2>
         </div>
-        <form className={styles.OTPForm} onSubmit={handleSubmit}>
+        <form
+          className={styles.OTPForm}
+          onSubmit={handleSubmit}
+          data-testid="OTPForm"
+        >
           <div className={styles.OTPContainer}>
             <div className={styles.inputsContainer}>
               {inputRefs.map((ref, index) => (

@@ -154,6 +154,9 @@ const RegisterForm = ({ formInputs, buttons, testId, prefillData }) => {
               onClick={button.icon ? handleGoogleRegister : undefined}
               type={button.type}
               key={index}
+              data-testid={
+                button.name === "Register" ? "Register" : "GoogleRegister"
+              }
             >
               {button.icon ? <img src={button.icon} /> : ""}
               {button.name}

@@ -10,6 +10,7 @@ global.within = within;
 global.fireEvent = fireEvent;
 global.waitFor = waitFor;
 global.userEvent = userEvent;
+global.location = window.location;
 
 // Vitest globals
 global.describe = describe;
