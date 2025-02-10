@@ -102,6 +102,10 @@ export const VerifyUser = async (req, res, next) => {
                 subject: subject,
                 message: message,
             });
+
+            return res.status(200).json({
+                success: true,
+            })
         }
         catch (error) {
             return res.status(401).json({

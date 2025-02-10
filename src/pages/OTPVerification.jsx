@@ -64,8 +64,7 @@ const OTPVerification = () => {
   const [isRunning, setIsRunning] = useState(true);
 
   // This click function handles the resend OTP logic
-  const handleClick = async (e) => {
-    e.target.disabled = false;
+  const handleClick = async () => {
     // Reset the timer when OTP is sent
     setIsRunning(true);
     setTime(30);
@@ -78,10 +77,12 @@ const OTPVerification = () => {
       }
     );
 
-    const response = request.json();
-    setError(response.message);
+    const response = await request.json();
+
     if (response.success) {
       setAuthentication(true);
+    } else {
+      setError(response.message);
     }
   };
 
@@ -93,7 +94,6 @@ const OTPVerification = () => {
           if (previousTime <= 0) {
             setIsRunning(false);
           }
-
           return previousTime - 1;
         });
       }
@@ -119,7 +119,7 @@ const OTPVerification = () => {
           data-testid="OTPForm"
         >
           <div className={styles.OTPContainer}>
-            <div className={styles.inputsContainer}>
+            <div className={styles.inputsContainer} data-testid="OTPInputs">
               {inputRefs.map((ref, index) => (
                 <input
                   key={index}
@@ -133,8 +133,9 @@ const OTPVerification = () => {
             <p>
               <button
                 className={styles.OTPButton}
-                disabled={time > 0 && time <= 30}
+                disabled={isRunning || time > 0}
                 onClick={handleClick}
+                data-testid="resendOTPBtn"
               >
                 Resend OTP
               </button>
@@ -142,7 +143,11 @@ const OTPVerification = () => {
             </p>
           </div>
 
-          <button className={styles.submitBtn} type="submit">
+          <button
+            className={styles.submitBtn}
+            type="submit"
+            data-testid="OTPSubmitBtn"
+          >
             Submit
           </button>
         </form>

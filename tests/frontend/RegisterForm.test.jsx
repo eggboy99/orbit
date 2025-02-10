@@ -4,6 +4,7 @@ import RegisterForm from "../../src/components/RegisterForm";
 import userEvent from "@testing-library/user-event";
 import OTPVerification from "../../src/pages/OTPVerification";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { waitFor } from "@testing-library/dom";
 
 const mockNavigate = vi.fn();
 
@@ -223,7 +224,7 @@ describe("Registration Form", () => {
   });
 
   it("should bring user to OTP verification page upon successful registration", async () => {
-    global.fetch = vi.fn(() =>
+    window.fetch = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
