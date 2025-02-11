@@ -1,0 +1,12 @@
+{
+  "presents": [
+    [
+      "@babel/presents-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ]
+}

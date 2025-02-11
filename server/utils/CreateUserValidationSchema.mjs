@@ -41,7 +41,7 @@ export const CreateUserValidationSchema = [
             // Remove any spaces or special characters except +
             const cleanNumber = value.replace(/[^\d+]/g, '');
             if (cleanNumber.length < 8 || cleanNumber.length > 15) {
-                throw new Error('Mobile numer must be between 8 and 15 digits');
+                throw new Error('Mobile number must be between 8 and 15 digits');
             }
             return true;
         }),

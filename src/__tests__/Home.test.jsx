@@ -2,7 +2,7 @@ import Home from "../../src/pages/Home";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
 import userEvent from "@testing-library/user-event";
-import PathnameDisplay from "../utils/PathnameDisplay";
+import PathnameDisplay from "./utils/PathnameDisplay";
 import { AuthenticationContextProvider } from "../../src/context/AuthenticationContext";
 describe("Home Page", () => {
   it("should have consists of two sections: Slogan Container and Company Information Container", () => {

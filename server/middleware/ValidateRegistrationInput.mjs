@@ -13,7 +13,7 @@ export const ValidateRegistrationInput = async (req, res, next) => {
                 success: false,
                 // Converts errors object into an array then we map each error to create a new object with just what we need
                 errors: errors.array().map(error => ({
-                    field: error.param,
+                    field: error.path,
                     message: error.msg
                 }))
             });

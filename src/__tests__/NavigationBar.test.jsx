@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import App from "../../src/App";
 import userEvent from "@testing-library/user-event";
 import { MobileMenuContextProvider } from "../../src/context/MobileMenuContext";
-import PathnameDisplay from "../utils/PathnameDisplay";
+import PathnameDisplay from "./utils/PathnameDisplay";
 import { AuthenticationContextProvider } from "../../src/context/AuthenticationContext";
 
 const navigationOptions = [

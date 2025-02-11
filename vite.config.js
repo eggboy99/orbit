@@ -8,7 +8,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: './tests/setup.mjs',
-    css: true
+    setupFiles: './src/__tests__/setup.mjs',
+    css: true,
+    exclude: ['node_modules', './server/**/*']
   }
 })

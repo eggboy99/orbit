@@ -21,7 +21,6 @@ export const AuthenticationContextProvider = ({ children }) => {
       const fetchedData = await response.json();
       setAuthentication(fetchedData.isAuthenticated);
     } catch (error) {
-      console.log("Authentication Error: ", error);
       setAuthentication(false);
     }
   }, []);
