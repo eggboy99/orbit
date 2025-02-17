@@ -5,7 +5,7 @@ import { uploadImage } from "../config/gridfs-setup.mjs";
 import sendEmail from "./SendOTP.mjs";
 
 
-export const RegisterUser = async (req, res, next) => {
+export const RegisterUser = async (req, res) => {
     try {
         const { email, password, username, mobileNumber, image, googleId } = req.body;
         // Submitted image data comes as a base64 string and we need to convert it to binary data

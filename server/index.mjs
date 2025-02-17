@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import './config/passport-config.mjs';
 import './config/google-oauth-config.mjs';
+import exploreRouter from './routes/explore.mjs';
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 5,
+        maxAge: 1000 * 60 * 60,
         secure: false,
     }
 }));
@@ -38,6 +39,7 @@ app.use(passport.session());
 connectDB();
 
 app.use('/api', authenticationRouter);
+app.use('/api', exploreRouter);
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');

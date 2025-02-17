@@ -9,7 +9,7 @@ import { MobileMenuContextProvider } from "./context/MobileMenuContext.jsx";
 import { AuthenticationContextProvider } from "./context/AuthenticationContext.jsx";
 import OTPVerification from "./pages/OTPVerification.jsx";
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx";
-
+import Explore from "./pages/Explore.jsx";
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/authentication", element: <Authentication /> },
@@ -19,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "authentication/verify/:id",
         element: <OTPVerification />,
+      },
+      {
+        path: "/explore",
+        element: <Explore />,
       },
     ],
   },

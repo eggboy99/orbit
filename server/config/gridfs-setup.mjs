@@ -21,10 +21,12 @@ const uploadImage = async (imageName, imageBuffer, metadata = {}) => {
             }
         });
 
+
+
         // Create a readable stream for us to read the data and connect it with uploadStream (writable)
         const bufferStream = new Readable();
         bufferStream.push(imageBuffer);
-        bufferStream.push(null); // Signals wer are done sending the data
+        bufferStream.push(null); // Signals we are are done sending the data
 
         // When everything is safely stored, we return the storage location or the error
         return new Promise((resolve, reject) => {
