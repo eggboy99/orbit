@@ -1,0 +1,361 @@
+input[type="text"] {
+  opacity: 1;
+}
+
+.modalContainer {
+  width: 90%;
+  position: absolute;
+  top: -5px;
+  padding: 5em;
+  height: 70%;
+  opacity: 0;
+  background-color: #353239;
+  transform: translateY(-50px);
+  transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;
+  z-index: -1;
+  overflow-y: scroll;
+}
+
+.modalContainer.active {
+  transform: translateY(0px);
+  opacity: 1;
+  margin: auto;
+  z-index: 2;
+}
+
+.closeModalButton {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  border: none;
+  background: none;
+}
+
+.closeModalButton img {
+  width: 32px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.closeModalButton img:hover {
+  transform: scale(1.2);
+}
+
+.modalContainer form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  height: auto;
+}
+
+.productNameContainer,
+.productDescriptionContainer {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.productNameContainer label,
+.productDescriptionContainer label {
+  width: fit-content;
+  font-size: var(--font-size-m);
+  color: var(--font-white);
+  font-weight: var(--font-medium);
+}
+
+.productName {
+  width: 40%;
+  padding: 0.3em 0.5em;
+  font-family: var(--font);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-medium);
+  border: none;
+  background-color: white;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.productName:focus {
+  box-shadow: 2px 2px 5px var(--font-white);
+}
+
+.productDescription {
+  font-family: var(--font);
+  font-size: var(--font-size-m);
+  font-weight: var(--font-regular);
+  width: 100%;
+  height: 150px;
+  padding: 0.3em 0.5em;
+  outline: none;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.productDescription:focus {
+  box-shadow: 2px 2px 5px var(--font-white);
+}
+
+.productCategoriesLocationsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 30px;
+}
+
+.categoriesContainer,
+.locationsContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.subCategoriesContainer,
+.subZonesContainer {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.subCategory,
+.subZone {
+  font-family: var(--font);
+  font-size: var(--font-size-s);
+  padding: 0.2em 1em;
+  background-color: aliceblue;
+  border: 2px solid #212529;
+  font-weight: var(--font-medium);
+  box-shadow: 1px 2px 3px #212529;
+  transition: background-color 0.5s ease;
+}
+
+.subCategory.active {
+  background-color: rgb(166, 182, 198);
+}
+
+.subCategory:hover {
+  background-color: rgb(166, 182, 198);
+}
+
+.subZone {
+  background-color: #e7f8f2;
+}
+
+.subZone.active {
+  background-color: #a4c9bc;
+}
+
+.subZone:hover {
+  background-color: #a4c9bc;
+}
+
+.conditionContainer {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  gap: 10px;
+}
+
+.conditionContainer label {
+  font-size: var(--font-size-m);
+  font-weight: var(--font-medium);
+  color: var(--font-white);
+}
+
+.conditionButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.conditionButtonsContainer button {
+  border: none;
+  font-family: var(--font);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-medium);
+  width: fit-content;
+  padding: 0.3em 0.5em;
+  background-color: #fcf6e9;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.conditionButtonsContainer button:hover {
+  background-color: #fbcd71;
+}
+
+.conditionButtonsContainer button.selected {
+  background-color: #fbcd71;
+}
+
+.uploadButton {
+  font-family: var(--font);
+  font-size: var(--font-size-l);
+  color: var(--font-black);
+  border: none;
+  font-weight: var(--font-semibold);
+  background-color: whitesmoke;
+  margin-top: 50px;
+  border-radius: 50px;
+  padding: 0.3em 1.2em;
+  position: relative;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.uploadButton::after,
+.uploadButton::before {
+  opacity: 0;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: conic-gradient(
+    from var(--angle),
+    #e76f51,
+    #f4a261,
+    #e9c46a,
+    #2a9d8f,
+    #748cab
+  );
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  border-radius: 50px;
+  padding: 5px;
+  animation: 3s spin linear infinite;
+  transition: opacity 0.2s ease-in;
+}
+
+.uploadButton::before {
+  filter: blur(1.2rem);
+  opacity: 0.5;
+}
+
+.uploadButton:hover::after,
+.uploadButton:hover::before {
+  opacity: 1;
+}
+
+@keyframes spin {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}
+
+@media (max-width: 1280px) {
+  .productNameContainer,
+  .productDescriptionContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .categoriesContainer,
+  .locationsContainer {
+    align-items: flex-start;
+  }
+
+  .subCategoriesContainer,
+  .subZonesContainer {
+    justify-content: flex-start;
+    gap: 5px;
+  }
+
+  .subCategory,
+  .subZone {
+    font-size: var(--font-size-base);
+    padding: 0.2em 1em;
+    border: 2px solid #212529;
+  }
+  .conditionContainer {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .conditionContainer label {
+    font-size: var(--font-size-s);
+  }
+
+  .conditionButtonsContainer {
+    gap: 15px;
+  }
+
+  .conditionButtonsContainer button {
+    font-size: var(--font-sizes-base);
+  }
+
+  .uploadButton {
+    font-size: var(--font-size-m);
+  }
+}
+
+@media (max-width: 580px) and (max-height: 932px) {
+  .modalContainer {
+    padding: 1.5em;
+  }
+
+  .modalContainer form {
+    gap: 10px;
+  }
+
+  .closeModalButton {
+    top: 10px;
+    right: 5px;
+  }
+
+  .closeModalButton img {
+    width: 16px;
+  }
+
+  .productNameContainer label,
+  .productDescriptionContainer label {
+    font-size: var(--font-size-base);
+  }
+
+  .productName {
+    font-family: var(--font);
+    font-size: var(--font-size-xs);
+    width: 70%;
+  }
+
+  .productName:focus {
+    box-shadow: 1px 1px 3px var(--font-white);
+  }
+
+  .productDescription {
+    font-size: var(--font-size-xs);
+  }
+
+  .productDescription:focus {
+    box-shadow: 1px 2px 3px var(--font-white);
+  }
+
+  .subCategory,
+  .subZone {
+    font-size: var(--font-size-xs);
+  }
+
+  .conditionContainer label {
+    font-size: var(--font-size-base);
+  }
+
+  .conditionButtonsContainer button {
+    font-size: var(--font-size-xs);
+  }
+
+  .uploadButton {
+    font-size: var(--font-size-base);
+  }
+}

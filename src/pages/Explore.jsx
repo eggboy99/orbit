@@ -4,34 +4,24 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "../assets/css/Explore.module.css";
 import SearchBar from "../components/SearchBar";
 import FilterIcon from "../assets/images/filter-icon.svg";
-import ArrowDownIcon from "../assets/images/arrow-down-icon.svg";
 import UploadIcon from "../assets/images/upload-icon.svg";
+import UploadProductModal from "../components/UploadProductModal";
+import CategorySelector from "../components/CategorySelector";
+import LocationSelector from "../components/LocationSelector";
 
 const Explore = () => {
   const { isActive } = useContext(MobileMenuContext);
+
+  // Handle upload product toggle modal
+  const [isModalToggled, toggleModal] = useState(false);
+  const handleToggleModal = () => {
+    toggleModal((previousState) => !previousState);
+  };
 
   // Categories filter utilities
   const [categories, setCategories] = useState([]);
   const [categorySelection, setCategorySelection] = useState("Choose Category");
   const [categoryDropdownActive, setCategoryDropdownActive] = useState(false);
-
-  const handleCategoryDropdown = () => {
-    setCategoryDropdownActive((previousSelection) => !previousSelection);
-    setLocationDropdownActive(false);
-    setFilterDropdownActive(false);
-  };
-
-  useEffect(() => {
-    if (categoryDropdownActive) {
-      setLocationDropdownActive(false);
-      setFilterDropdownActive(false);
-    }
-  }, [categoryDropdownActive]);
-
-  const handleCategorySelection = (event) => {
-    setCategorySelection(event.target.textContent);
-    setCategoryDropdownActive((previousSelection) => !previousSelection);
-  };
 
   const [subCategorySelection, setSubCategorySelection] = useState(null);
   const handleSubCategorySelection = (event) => {
@@ -43,14 +33,9 @@ const Explore = () => {
   const [locationSelection, setLocationSelection] = useState("Choose Location");
   const [locationDropdownActive, setLocationDropdownActive] = useState(false);
 
-  const handleLocationDropdown = () => {
-    setLocationDropdownActive((previousSelection) => !previousSelection);
-    setCategoryDropdownActive(false);
-    setFilterDropdownActive(false);
-  };
-  const handleLocationSelection = (event) => {
-    setLocationSelection(event.target.textContent);
-    setLocationDropdownActive((previousSelection) => !previousSelection);
+  const [subZoneSelection, setSubZoneSelection] = useState(null);
+  const handleSubZoneSelection = (event) => {
+    setSubZoneSelection(event.target.textContent);
   };
 
   // Extra filter options utilities
@@ -117,37 +102,6 @@ const Explore = () => {
     handleConditionSelection("New");
   };
 
-  useEffect(() => {
-    const fetchCategoriesData = async () => {
-      const request = await fetch(
-        "http://localhost:3000/api/retrieve-categories",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      const response = await request.json();
-      setCategories(response.categories);
-    };
-
-    const fetchLocationsData = async () => {
-      const request = await fetch(
-        "http://localhost:3000/api/retrieve-locations",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      const response = await request.json();
-      setLocations(response.towns);
-    };
-
-    fetchCategoriesData();
-    fetchLocationsData();
-  }, []);
-
   return (
     <>
       <nav>
@@ -155,63 +109,39 @@ const Explore = () => {
       </nav>
       {isActive ? null : (
         <main>
-          <button className={styles.uploadButton}>
+          <button className={styles.uploadButton} onClick={handleToggleModal}>
             Upload
             <img src={UploadIcon} alt="Upload Icon" />
           </button>
+          <UploadProductModal
+            isModalToggled={isModalToggled}
+            toggleModal={toggleModal}
+          />
           <div className={styles.searchToolsContainer}>
             <SearchBar />
             <div className={styles.filterContainer}>
-              <div className={styles.categoryContainer}>
-                <label htmlFor="">Category</label>
-                <div
-                  className={styles.categoryInput}
-                  onClick={handleCategoryDropdown}
-                >
-                  <p>{categorySelection}</p>
-                  <img src={ArrowDownIcon} alt="" />
-                </div>
-                <div
-                  className={`${styles.categoriesDropdown} ${
-                    categoryDropdownActive ? styles.active : ""
-                  }`}
-                >
-                  {categories.map((element, index) => (
-                    <p
-                      className={styles.category}
-                      key={index}
-                      onClick={handleCategorySelection}
-                    >
-                      {element.name}
-                    </p>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.locationContainer}>
-                <label htmlFor="location">Location</label>
-                <div
-                  className={styles.locationInput}
-                  onClick={handleLocationDropdown}
-                >
-                  <p>{locationSelection}</p>
-                  <img src={ArrowDownIcon} alt="" />
-                </div>
-                <div
-                  className={`${styles.locationsDropdown} ${
-                    locationDropdownActive ? styles.active : ""
-                  }`}
-                >
-                  {locations.map((element, index) => (
-                    <p
-                      className={styles.location}
-                      key={index}
-                      onClick={handleLocationSelection}
-                    >
-                      {element.name}
-                    </p>
-                  ))}
-                </div>
-              </div>
+              <CategorySelector
+                categories={categories}
+                setCategories={setCategories}
+                categorySelection={categorySelection}
+                setCategorySelection={setCategorySelection}
+                categoryDropdownActive={categoryDropdownActive}
+                setCategoryDropdownActive={setCategoryDropdownActive}
+                setLocationDropdownActive={setLocationDropdownActive}
+                setFilterDropdownActive={setFilterDropdownActive}
+                variant="explore"
+              />
+              <LocationSelector
+                locations={locations}
+                setLocations={setLocations}
+                locationDropdownActive={locationDropdownActive}
+                setLocationDropdownActive={setLocationDropdownActive}
+                locationSelection={locationSelection}
+                setLocationSelection={setLocationSelection}
+                setCategoryDropdownActive={setCategoryDropdownActive}
+                setFilterDropdownActive={setFilterDropdownActive}
+                variant="explore"
+              />
               <img
                 src={FilterIcon}
                 alt="Filter Icon"
@@ -285,6 +215,21 @@ const Explore = () => {
                     onClick={handleSubCategorySelection}
                   >
                     {subCategory}
+                  </button>
+                ))}
+            </div>
+            <div className={styles.subZonesContainer}>
+              {locations
+                .find((location) => location.name === locationSelection)
+                ?.subzones.map((subZone, index) => (
+                  <button
+                    key={index}
+                    className={`${styles.subZone} ${
+                      subZone === subZoneSelection ? styles.active : ""
+                    }`}
+                    onClick={handleSubZoneSelection}
+                  >
+                    {subZone}
                   </button>
                 ))}
             </div>

@@ -53,7 +53,7 @@
   }
 }
 
-@media (max-width: 580px) and (max-height: 932px) {
+@media (max-width: 580px) and (max-height: 932px), (max-width: 580px) {
   .searchBar input {
     font-size: var(--font-size-base);
   }

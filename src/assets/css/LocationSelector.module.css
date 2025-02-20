@@ -1,0 +1,142 @@
+.locationContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: var(--font-size-m);
+  font-weight: var(--font-semibold);
+  color: var(--font-black);
+  position: relative;
+}
+
+.locationContainer.upload {
+  align-items: flex-start;
+}
+
+.categoryLabel.upload {
+  color: var(--font-white);
+}
+
+.locationInput {
+  background-color: var(--light-blue);
+  color: #edf6f9;
+  width: fit-content;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--font-size-s);
+  text-align: center;
+  white-space: nowrap;
+  font-weight: var(--font-medium);
+  padding: 0.5em 1em;
+  border: 2px solid black;
+  border-radius: 50px;
+  box-shadow: 1px 1px 2px black;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.locationInput {
+  background-color: var(--green);
+}
+
+.locationInput:hover {
+  background-color: #4d7568;
+  cursor: default;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #212529;
+}
+
+.locationsDropdown {
+  width: 200px;
+  background-color: aliceblue;
+  height: 200px;
+  align-items: center;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  padding: 1em 1em;
+  gap: 20px;
+  position: absolute;
+  top: calc(100% + 10px);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  z-index: -1;
+}
+
+.locationsDropdown.active {
+  opacity: 1;
+  z-index: 1;
+  transform: translateY(0px);
+}
+
+.location {
+  width: 100%;
+  font-size: var(--font-size-s);
+  font-weight: var(--font-medium);
+  text-align: center;
+  color: var(--font-black);
+  transition: padding 0.1s ease-in;
+}
+
+.location:hover {
+  color: var(--green);
+  border-radius: 1em;
+  width: 100%;
+  cursor: default;
+}
+
+@media (max-width: 1280px) {
+  .locationContainer {
+    font-size: var(--font-size-s);
+  }
+
+  .locationInput {
+    font-size: var(--font-size-base);
+  }
+
+  .locationsDropdown {
+    width: 150px;
+  }
+
+  .location {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 580px) and (max-height: 932px), (max-width: 580px) {
+  .locationContainer {
+    width: 100px;
+    font-size: var(--font-size-base);
+  }
+  .locationInput {
+    font-size: var(--font-size-xxs);
+    padding: 0.2em 0.7em;
+    align-items: center;
+    border: 1px solid black;
+  }
+
+  .locationsDropdown {
+    width: 100px;
+  }
+
+  .locationInput img {
+    width: 16px;
+  }
+
+  .location {
+    width: fit-content;
+    padding: 0;
+    font-size: var(--font-size-xs);
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px !important;
+  }
+}
