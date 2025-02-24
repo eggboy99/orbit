@@ -21,8 +21,6 @@ const uploadImage = async (imageName, imageBuffer, metadata = {}) => {
             }
         });
 
-
-
         // Create a readable stream for us to read the data and connect it with uploadStream (writable)
         const bufferStream = new Readable();
         bufferStream.push(imageBuffer);

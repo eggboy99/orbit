@@ -4,10 +4,13 @@ import ImageDropzone from "./ImageDropzone";
 import CategorySelector from "./CategorySelector";
 import LocationSelector from "./LocationSelector";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import CloseIcon from "../assets/images/white-close-icon.svg";
+import AuthenticationContext from "../context/AuthenticationContext";
 
 const UploadProductModal = ({ isModalToggled, toggleModal }) => {
+  const { user } = useContext(AuthenticationContext);
+
   const [categories, setCategories] = useState([]);
   const [categorySelection, setCategorySelection] = useState("Choose Category");
   const [categoryDropdownActive, setCategoryDropdownActive] = useState(false);
@@ -36,12 +39,78 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
   const {
     handleSubmit,
     control,
+    register,
     setValue,
+    setError,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const readFileAsDataURL = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+  };
+
+  const onSubmit = async (data) => {
+    if (
+      subCategorySelection === null &&
+      categorySelection === "Choose Category"
+    ) {
+      setError("subCategory", {
+        type: "manual",
+        message: "Please select a category",
+      });
+      return;
+    }
+    if (subZoneSelection === null && locationSelection === "Choose Location") {
+      setError("subZone", {
+        type: "manual",
+        message: "Please select a location",
+      });
+      return;
+    }
+
+    if (conditionSelection === null) {
+      setError("condition", {
+        type: "manual",
+        message:
+          "Please choose an option that best describes your product condition",
+      });
+      return;
+    }
+
+    data.category = categorySelection;
+    data.location = locationSelection;
+    data.condition = conditionSelection;
+    data.userId = user;
+
+    // Create an array of promise, one for each image file
+    const fileReadPromises = data.images.map((image) =>
+      readFileAsDataURL(image)
+    );
+
+    // Wait for all reads to complete
+    const base64Images = await Promise.all(fileReadPromises);
+    data.images = base64Images;
+
+    const request = await fetch(
+      "http://localhost:3000/api/explore/upload-product",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    );
+
+    const response = await request.json();
+    console.log(response);
+    if (response.success) {
+      toggleModal((previousState) => !previousState);
+    }
   };
 
   return (
@@ -82,9 +151,28 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
         />
         <div className={styles.productNameContainer}>
           <label htmlFor="productName">Product</label>
-          <input type="text" className={styles.productName} id="productName" />
+          <input
+            type="text"
+            className={styles.productName}
+            id="productName"
+            {...register("productName", {
+              required: "Product name is required",
+              minLength: {
+                value: 3,
+                message: "Product name must be at least of 3 characters",
+              },
+              maxLength: {
+                value: 21,
+                message: "Product name cannot exceed 21 characters",
+              },
+            })}
+          />
+          {errors.productName ? (
+            <p className={styles.errorMessage}>{errors.productName.message}</p>
+          ) : (
+            ""
+          )}
         </div>
-
         <div className={styles.productDescriptionContainer}>
           <label htmlFor="productDescription">Description</label>
           <textarea
@@ -120,6 +208,13 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
                   </button>
                 ))}
             </div>
+            {errors.subCategory ? (
+              <p className={styles.errorMessage}>
+                {errors.subCategory.message}
+              </p>
+            ) : (
+              ""
+            )}
           </div>
           <div className={styles.locationsContainer}>
             <LocationSelector
@@ -148,6 +243,11 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
                   </button>
                 ))}
             </div>
+            {errors.subZone ? (
+              <p className={styles.errorMessage}>{errors.subZone.message}</p>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className={styles.conditionContainer}>
@@ -179,6 +279,11 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
               Well used
             </button>
           </div>
+          {errors.condition ? (
+            <p className={styles.errorMessage}>{errors.condition.message}</p>
+          ) : (
+            ""
+          )}
         </div>
         <button type="submit" className={styles.uploadButton}>
           Upload

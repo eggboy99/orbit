@@ -6,6 +6,7 @@ const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
   const [isAuthenticated, setAuthentication] = useState(false);
+  const [user, setUser] = useState(null);
 
   // Retrieve the Authentication from the backend server and set the value as the state of isAuthenticated
   const checkAuthStatus = useCallback(async () => {
@@ -20,6 +21,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 
       const fetchedData = await response.json();
       setAuthentication(fetchedData.isAuthenticated);
+      setUser(fetchedData.user.id);
     } catch (error) {
       setAuthentication(false);
     }
@@ -31,6 +33,7 @@ export const AuthenticationContextProvider = ({ children }) => {
         isAuthenticated,
         setAuthentication,
         checkAuthStatus,
+        user,
       }}
     >
       {children}

@@ -29,7 +29,7 @@ const LocationSelector = ({
   useEffect(() => {
     const fetchLocationsData = async () => {
       const request = await fetch(
-        "http://localhost:3000/api/retrieve-locations",
+        "http://localhost:3000/api/explore/retrieve-locations",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

@@ -105,7 +105,7 @@ const OTPVerification = () => {
   return (
     <>
       <NavigationBar />
-      <main>
+      <main className={styles.OTPVerificationContainer}>
         <div className={styles.headingContainer}>
           <h1>Verify your email address</h1>
           <h2>

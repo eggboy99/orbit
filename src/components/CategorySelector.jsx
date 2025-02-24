@@ -41,7 +41,7 @@ const CategorySelector = ({
   useEffect(() => {
     const fetchCategoriesData = async () => {
       const request = await fetch(
-        "http://localhost:3000/api/retrieve-categories",
+        "http://localhost:3000/api/explore/retrieve-categories",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

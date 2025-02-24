@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { gfs } from "../config/gridfs-setup.mjs";
 
 const UserSchema = new mongoose.Schema({
     googleId: {
@@ -66,6 +67,16 @@ UserSchema.pre('save', async function (next) {
         next();
     } catch (e) {
         return next(e);
+    }
+})
+
+UserSchema.post('findOneAndDelete', async (document) => {
+    if (document && document.profileImage) {
+        try {
+            await gfs.delete(document.profileImage);
+        } catch (error) {
+            console.error(`Error deleting user proifle image with ID ${document.profileImage._id}: `, error);
+        }
     }
 })
 
