@@ -162,8 +162,8 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
                 message: "Product name must be at least of 3 characters",
               },
               maxLength: {
-                value: 21,
-                message: "Product name cannot exceed 21 characters",
+                value: 30,
+                message: "Product name cannot exceed 30 characters",
               },
             })}
           />

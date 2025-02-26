@@ -31,6 +31,10 @@ const ProductSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'images.files'
     }],
+    saved: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+    }]
 })
 
 ProductSchema.post('findOneAndDelete', async (document) => {

@@ -1,0 +1,142 @@
+.productsContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+  width: 100%;
+  padding-bottom: 3em;
+}
+
+.productContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out;
+}
+
+.productContainer:hover {
+  transform: scale(1.005);
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 15px;
+}
+
+.bookmark {
+  width: 32px;
+  transition: fill 0.2s ease-in-out;
+}
+
+.bookmark:hover {
+  fill: var(--yellow);
+}
+
+.nameContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.savedContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.savedContainer p {
+  font-size: var(--font-size-s);
+}
+
+.productName {
+  font-weight: var(--font-bold);
+  font-size: var(--font-size-s);
+}
+
+.productCondition,
+.productContainer {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-medium);
+}
+
+.productCondition.new {
+  color: var(--green);
+}
+.productCondition.likeNew {
+  color: var(--light-blue);
+}
+.productCondition.wellUsed {
+  color: var(--orange);
+}
+
+.productLocation {
+  margin-top: 5px;
+}
+
+@media (max-width: 1280px) {
+  .productsContainer {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 0.5em;
+    padding-bottom: 2em;
+  }
+
+  .bookmark {
+    width: 16px;
+  }
+
+  .savedContainer p {
+    font-size: var(--font-size-base);
+  }
+
+  .productCondition,
+  .productContainer {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 580px) and (max-height: 932px) {
+  .productsContainer {
+    grid-template-columns: repeat(2, 1fr); /* 5 equal-width columns */
+    padding: 0 0.5em;
+    padding-bottom: 2em;
+  }
+
+  .savedContainer p {
+    font-size: var(--font-size-base);
+  }
+
+  .productName {
+    font-weight: var(--font-medium);
+    font-size: var(--font-size-xs);
+  }
+
+  .productCondition,
+  .productContainer {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 932px) and (max-height: 430px) {
+  .productsContainer {
+    grid-template-columns: repeat(3, 1fr); /* 5 equal-width columns */
+    padding: 0 0.5em;
+    padding-bottom: 2em;
+  }
+
+  .savedContainer p {
+    font-size: var(--font-size-base);
+  }
+
+  .productName {
+    font-weight: var(--font-medium);
+    font-size: var(--font-size-xs);
+  }
+
+  .productCondition,
+  .productContainer {
+    font-size: var(--font-size-xs);
+  }
+}

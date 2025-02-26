@@ -1,6 +1,6 @@
 import NavigationBar from "../components/NavigationBar";
 import MobileMenuContext from "../context/MobileMenuContext";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import styles from "../assets/css/Explore.module.css";
 import SearchBar from "../components/SearchBar";
 import FilterIcon from "../assets/images/filter-icon.svg";
@@ -8,6 +8,7 @@ import UploadIcon from "../assets/images/upload-icon.svg";
 import UploadProductModal from "../components/UploadProductModal";
 import CategorySelector from "../components/CategorySelector";
 import LocationSelector from "../components/LocationSelector";
+import ProductsRenderer from "../components/ProductsRenderer";
 
 const Explore = () => {
   const { isActive } = useContext(MobileMenuContext);
@@ -48,12 +49,6 @@ const Explore = () => {
   const [sortSelection, setSortSelection] = useState(null);
   const [conditionSelection, setConditionSelection] = useState(null);
 
-  // Set default selection for both sort and condition filter to recency and new respectively
-  useEffect(() => {
-    setSortSelection(recencyRef.current.textContent);
-    setConditionSelection(newRef.current.textContent);
-  }, []);
-
   const handleFilterDropdown = () => {
     setFilterDropdownActive((previousState) => !previousState);
     setCategoryDropdownActive(false);
@@ -63,12 +58,13 @@ const Explore = () => {
   // Handles sorting type filter selection
   const handleSortSelection = (selection) => {
     if (!recencyRef.current || !proximityRef.current) return;
-    recencyRef.current.classList.add(styles.selected);
 
     if (selection === "Recency") {
+      setSortSelection("Recency");
       recencyRef.current.classList.add(styles.selected);
       proximityRef.current.classList.remove(styles.selected);
     } else if (selection === "Proximity") {
+      setSortSelection("Proximity");
       proximityRef.current.classList.add(styles.selected);
       recencyRef.current.classList.remove(styles.selected);
     }
@@ -77,20 +73,22 @@ const Explore = () => {
   // Handles condition filter selection
   const handleConditionSelection = (selection) => {
     if (!newRef.current || !likeNewRef.current || !wellUsedRef.current) return;
-    newRef.current.classList.add(styles.selected);
 
     if (selection === "New") {
       newRef.current.classList.add(styles.selected);
       likeNewRef.current.classList.remove(styles.selected);
       wellUsedRef.current.classList.remove(styles.selected);
+      setConditionSelection("New");
     } else if (selection === "Like new") {
       likeNewRef.current.classList.add(styles.selected);
       newRef.current.classList.remove(styles.selected);
       wellUsedRef.current.classList.remove(styles.selected);
+      setConditionSelection("Like new");
     } else if (selection === "Well used") {
       wellUsedRef.current.classList.add(styles.selected);
       newRef.current.classList.remove(styles.selected);
       likeNewRef.current.classList.remove(styles.selected);
+      setConditionSelection("Well used");
     }
   };
 
@@ -98,9 +96,18 @@ const Explore = () => {
   const handleResetFilter = () => {
     setCategorySelection("Choose Category");
     setLocationSelection("Choose Location");
-    handleSortSelection("Recency");
-    handleConditionSelection("New");
+
+    setSortSelection(null);
+    recencyRef.current.classList.remove(styles.selected);
+    proximityRef.current.classList.remove(styles.selected);
+
+    setConditionSelection(null);
+    newRef.current.classList.remove(styles.selected);
+    likeNewRef.current.classList.remove(styles.selected);
+    wellUsedRef.current.classList.remove(styles.selected);
   };
+
+  const [searchValue, setSearchValue] = useState("");
 
   return (
     <>
@@ -118,7 +125,7 @@ const Explore = () => {
             toggleModal={toggleModal}
           />
           <div className={styles.searchToolsContainer}>
-            <SearchBar />
+            <SearchBar setSearchValue={setSearchValue} />
             <div className={styles.filterContainer}>
               <CategorySelector
                 categories={categories}
@@ -234,6 +241,12 @@ const Explore = () => {
                 ))}
             </div>
           </div>
+          <ProductsRenderer
+            searchValue={searchValue}
+            categorySelection={categorySelection}
+            locationSelection={locationSelection}
+            conditionSelection={conditionSelection}
+          />
         </main>
       )}
     </>
