@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, useMemo } from "react";
 import styles from "../assets/css/ProductsRenderer.module.css";
 import AuthenticationContext from "../context/AuthenticationContext";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const ProductsRenderer = ({
   searchValue,
@@ -108,14 +109,23 @@ const ProductsRenderer = ({
     conditionSelection,
   ]);
 
+  const navigate = useNavigate();
+  const handleProductNavigation = (productId) => {
+    navigate(`/explore/product/${productId}`);
+  };
+
   return (
     <div className={styles.productsContainer}>
       {products != null &&
         filteredProducts.map((product) => (
-          <div key={product._id} className={styles.productContainer}>
+          <div
+            key={product._id}
+            className={styles.productContainer}
+            onClick={() => handleProductNavigation(product._id)}
+          >
             <img
               className={styles.productImage}
-              src={product.productImages[0]}
+              src={product.productImages[product.productImages.length - 1]}
               alt="Product Image"
             />
             <div className={styles.nameContainer}>

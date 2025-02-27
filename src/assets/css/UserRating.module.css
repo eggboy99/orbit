@@ -1,0 +1,8 @@
+.userRatingContainer {
+  margin-top: 5px;
+}
+
+.reviewMessage {
+  font-size: var(--font-size-base) !important;
+  font-weight: var(--font-regular) !important;
+}

@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import { gfs } from "../config/gridfs-setup.mjs";
 
 const ProductSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    },
     name: {
         type: String,
         required: true,
@@ -34,7 +38,11 @@ const ProductSchema = new mongoose.Schema({
     saved: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
-    }]
+    }],
+    date: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 ProductSchema.post('findOneAndDelete', async (document) => {

@@ -25,6 +25,7 @@ export const ProductUpload = async (req, res, next) => {
         })
     );
     const newProduct = new Products({
+        user: userId,
         name: productName,
         description: productDescription,
         category,

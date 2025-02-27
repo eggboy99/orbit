@@ -103,17 +103,20 @@ const ImageDropzone = ({ onChange, error, setValue }) => {
       </div>
       <div className={styles.uploadedImgContainer}>
         {previewFiles.length > 0 &&
-          previewFiles.map((file, index) => (
-            <div key={index} className={styles.imageContainer}>
-              <img
-                src={BlackCloseIcon}
-                alt="Remove Uploaded Image Icon"
-                className={styles.removeImage}
-                onClick={() => handleRemoveImage(index)}
-              />
-              <img src={file.preview} className={styles.uploadedImg} />
-            </div>
-          ))}
+          previewFiles
+            .slice()
+            .reverse()
+            .map((file, index) => (
+              <div key={index} className={styles.imageContainer}>
+                <img
+                  src={BlackCloseIcon}
+                  alt="Remove Uploaded Image Icon"
+                  className={styles.removeImage}
+                  onClick={() => handleRemoveImage(index)}
+                />
+                <img src={file.preview} className={styles.uploadedImg} />
+              </div>
+            ))}
       </div>
     </>
   );

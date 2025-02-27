@@ -10,6 +10,8 @@ import { AuthenticationContextProvider } from "./context/AuthenticationContext.j
 import OTPVerification from "./pages/OTPVerification.jsx";
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx";
 import Explore from "./pages/Explore.jsx";
+import Product from "./pages/Product.jsx";
+
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/authentication", element: <Authentication /> },
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/explore",
         element: <Explore />,
+      },
+      {
+        path: "/explore/product/:id",
+        element: <Product />,
       },
     ],
   },

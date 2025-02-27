@@ -51,6 +51,12 @@ const UserSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false,
+    },
+    rating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
     }
 }, {
     timestamps: true

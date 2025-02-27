@@ -107,7 +107,6 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
     );
 
     const response = await request.json();
-    console.log(response);
     if (response.success) {
       toggleModal((previousState) => !previousState);
     }
@@ -178,6 +177,7 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
           <textarea
             id="productDescription"
             className={styles.productDescription}
+            {...register("productDescription")}
           ></textarea>
         </div>
         <div className={styles.productCategoriesLocationsContainer}>

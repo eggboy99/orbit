@@ -9,6 +9,7 @@ import UploadProductModal from "../components/UploadProductModal";
 import CategorySelector from "../components/CategorySelector";
 import LocationSelector from "../components/LocationSelector";
 import ProductsRenderer from "../components/ProductsRenderer";
+import { Outlet } from "react-router-dom";
 
 const Explore = () => {
   const { isActive } = useContext(MobileMenuContext);
