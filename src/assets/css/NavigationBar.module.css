@@ -12,7 +12,7 @@ nav {
 .navigationContainer {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   list-style: none;
   font-family: var(--font);
@@ -61,11 +61,104 @@ nav {
   display: none;
 }
 
+.userProfile {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.userProfile:hover {
+  transform: scale(1.1);
+}
+
+.navigationContainer > li:last-child {
+  position: relative;
+}
+
+.dropdownMenuContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 300%;
+  left: 50%;
+  align-items: center;
+  gap: 30px;
+  z-index: -1;
+  background-color: var(--font-black);
+  border-radius: 15px;
+  box-shadow: 2px 3px 10px var(--font-black);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dropdownMenuContainer.active {
+  z-index: 2;
+  opacity: 1;
+}
+
+.profile,
+.chat,
+.logout {
+  display: flex;
+  gap: 10px;
+  padding: 0 2em;
+  align-items: center;
+  transition: color 0.2s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.profile {
+  padding-top: 1.5em;
+}
+
+.logout {
+  background-color: #a64138;
+  padding: 0.5em 2em;
+  border-radius: 0 0 15px 15px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.profile img,
+.chat img,
+.logout img {
+  width: 32px;
+}
+
+.profile > p:hover,
+.chat > p:hover {
+  color: var(--light-blue);
+  cursor: default;
+}
+
+.profile:hover,
+.chat:hover {
+  cursor: default;
+}
+
+.logout > p:hover {
+  cursor: default;
+}
+
+.logout:hover {
+  background-color: #7e2e25;
+  cursor: default;
+}
+
+.dropdownMenuContainer * {
+  text-decoration: none;
+  font-family: var(--font-Gabarito);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-medium);
+  color: var(--font-white);
+}
+
 /* Tablet */
 @media (max-width: 1280px) {
   .navigationContainer {
     font-size: var(--font-size-base);
-    padding: 2em 0;
+    padding: 2em;
   }
 
   .brandContainer {
@@ -78,6 +171,16 @@ nav {
     font-size: var(--font-size-base);
     font-weight: var(--font-semibold);
   }
+
+  .profile img,
+  .chat img,
+  .logout img {
+    width: 32px;
+  }
+
+  .dropdownMenuContainer * {
+    font-size: var(--font-size-base);
+  }
 }
 
 /* Mobile */
@@ -89,20 +192,17 @@ nav {
   .navigationContainer.active {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 90vh;
-    justify-content: space-around;
     font-family: var(--font);
     font-size: var(--font-size-m);
-    padding: 2em 0;
     transition: 0.1s ease-in;
   }
 
   .navigationContainer.active > li > .link {
     display: flex;
-  }
-
-  .navigationContainer.active > .brand {
-    display: none;
+    height: fit-content;
   }
 
   .brandLogo {
@@ -152,10 +252,52 @@ nav {
     top: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
   }
+
+  .navigationContainer.active > li:nth-last-child(1) {
+    display: none;
+  }
+
+  .navigationContainer.active > li > .brandContainer {
+    display: none;
+  }
+
+  .userProfile {
+    width: 40px;
+    height: 40px;
+  }
+
+  .dropdownMenuContainer {
+    top: 260%;
+    left: 35%;
+    align-items: center;
+    gap: 20px;
+    z-index: 2;
+    border-radius: 10px;
+    box-shadow: 1px 2px 5px var(--font-black);
+  }
+
+  .logout {
+    border-radius: 0 0 10px 10px;
+  }
+
+  .profile img,
+  .chat img,
+  .logout img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dropdownMenuContainer * {
+    font-size: var(--font-size-xs);
+  }
 }
 
-@media (max-width: 820px) and (max-height: 550px) {
+@media (max-width: 932px) and (max-height: 580px) {
   nav {
     top: -40px;
+  }
+
+  .navigationContainer.active > li:nth-last-child(1) {
+    display: none;
   }
 }

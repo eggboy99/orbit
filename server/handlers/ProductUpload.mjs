@@ -3,7 +3,6 @@ import { uploadImage } from "../config/gridfs-setup.mjs";
 
 export const ProductUpload = async (req, res, next) => {
     const { images, productName, productDescription, category, location, condition, userId } = req.body;
-
     const productImageIds = await Promise.all(
         images.map(async (image, index) => {
             const imageBuffer = Buffer.from(

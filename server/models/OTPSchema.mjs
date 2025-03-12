@@ -10,12 +10,12 @@ const OTPSchema = new mongoose.Schema({
         required: true,
     },
 
-
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 3000,  // Destroy the OTP document when it expires
+        expires: 30,  // Destroy the OTP document when it expires
     },
 })
+
 
 export default mongoose.model('OTP', OTPSchema);

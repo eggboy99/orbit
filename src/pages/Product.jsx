@@ -6,20 +6,25 @@ import styles from "../assets/css/Product.module.css";
 import DateConversion from "../utils/DateConversion.mjs";
 import { RetrieveUserDetails } from "../utils/RetrieveUserDetails.mjs";
 import UserRating from "../components/UserRating";
+import ChatContainer from "../components/ChatContainer";
 
 const Product = () => {
-  const { checkAuthStatus } = useContext(AuthenticationContext);
-  checkAuthStatus();
+  const { checkAuthStatus, user } = useContext(AuthenticationContext);
 
-  const product = useParams();
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  const product = useParams(); // Retrieve the product id from the URL parametr
 
   const [productDetails, setProductDetails] = useState({});
 
   let productUploadedDate;
   if (productDetails.date) {
-    productUploadedDate = DateConversion(productDetails.date);
+    productUploadedDate = DateConversion(productDetails.date); // Convert the product upload date to proper format usnig util function
   }
 
+  // Fetch the product details from the backend
   useEffect(() => {
     const fetchProductData = async () => {
       const request = await fetch(
@@ -37,8 +42,10 @@ const Product = () => {
     fetchProductData();
   }, [setProductDetails, product.id]);
 
+  // use to control the state of the product image
   const [mainImageUrl, setMainImageUrl] = useState(null);
 
+  // set the product's main image once the productDetails data has finished fetching
   useEffect(() => {
     if (
       productDetails.productImages &&
@@ -50,6 +57,7 @@ const Product = () => {
     }
   }, [productDetails, mainImageUrl]);
 
+  // this function display ensure that the selected image from the user becomes the main image
   const handleSetMainImage = (index) => {
     const reversedImages = productDetails.productImages.slice().reverse();
     for (let i = 0; i < reversedImages.length; ++i) {
@@ -59,8 +67,14 @@ const Product = () => {
     }
   };
 
-  const [userDetails, setUserDetails] = useState(null);
+  // state to control the enquire chat container
+  const [isChatClose, setChatClose] = useState(false);
+  const handleChatContainerState = () => {
+    userDetails && setChatClose((previousState) => !previousState);
+  };
 
+  // use to retreive the owner of the listed product
+  const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
     const fetchUserData = async () => {
       if (Object.keys(productDetails).length !== 0) {
@@ -71,6 +85,28 @@ const Product = () => {
 
     fetchUserData();
   }, [setUserDetails, productDetails]);
+
+  // use to check the online status of user
+  const [userStatus, setUserStatus] = useState(null);
+  useEffect(() => {
+    if (userDetails) {
+      const getuserStatus = async () => {
+        const request = await fetch(
+          `http://localhost:3000/api/auth/user-online-status/${userDetails.user}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const response = await request.json();
+        setUserStatus(response);
+      };
+      getuserStatus();
+    } else {
+      return;
+    }
+  }, [isChatClose]);
 
   return (
     <>
@@ -144,10 +180,24 @@ const Product = () => {
               </div>
             </div>
           </div>
-          <button type="submit" className={styles.enquireButton}>
-            Enquire
-          </button>
+          {user && userDetails && user !== userDetails.user && (
+            <button
+              type="submit"
+              className={styles.enquireButton}
+              onClick={handleChatContainerState}
+            >
+              Enquire
+            </button>
+          )}
         </div>
+        <ChatContainer
+          isChatClose={isChatClose}
+          handleChatContainerState={handleChatContainerState}
+          userDetails={userDetails}
+          user={user}
+          product={product}
+          userStatus={userStatus}
+        />
       </main>
     </>
   );

@@ -1,0 +1,117 @@
+.chatContainerForm {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0 30px;
+  align-items: flex-end;
+  padding-bottom: 30px;
+  position: relative;
+}
+
+.uploadError {
+  color: #cc444b;
+  font-size: var(--font-size-s);
+  position: absolute;
+  top: 40px;
+}
+
+.uploadedImgContainer {
+  display: flex;
+  justify-content: flex-start;
+  width: fit-content;
+  position: absolute;
+  top: -150px;
+  gap: 10px;
+}
+
+.imageContainer {
+  height: 128px;
+  position: relative;
+}
+
+.uploadedImg {
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImage {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  width: 20px;
+  z-index: 1;
+  background-color: whitesmoke;
+  border-radius: 3px;
+}
+
+.attachImageButton {
+  margin-bottom: 8px;
+  transition: filter 0.2s ease-in;
+}
+
+.attachImageButton:hover {
+  filter: brightness(0.5);
+}
+
+.messageInput {
+  border: none;
+  width: 100%;
+  padding: 1em;
+  font-family: var(--font);
+  font-size: var(--font-size-s);
+  border-radius: 50px;
+}
+
+.sendMessageButton {
+  border: none;
+  background: none;
+  margin-bottom: 8px;
+}
+
+.sendMessageButton img.disabled {
+  filter: brightness(0.7);
+}
+
+@media (max-width: 1280px) {
+  .uploadError {
+    font-size: var(--font-size-base);
+    top: -40px;
+  }
+
+  .attachImageButton {
+    margin-bottom: 10px;
+    width: 32px;
+  }
+
+  .messageInput {
+    font-size: var(--font-size-base);
+  }
+
+  .sendMessageButton img {
+    width: 32px;
+  }
+}
+
+@media (max-width: 580px) and (max-height: 932px), (max-width: 580px) {
+  .uploadError {
+    font-size: var(--font-size-xs);
+    top: -30px;
+  }
+
+  .attachImageButton {
+    margin-bottom: 5px;
+    width: 32px;
+  }
+
+  .messageInput {
+    font-size: var(--font-size-xs);
+  }
+
+  .sendMessageButton {
+    margin-bottom: 5px;
+  }
+
+  .sendMessageButton img {
+    width: 32px;
+  }
+}

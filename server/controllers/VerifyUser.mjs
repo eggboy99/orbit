@@ -1,4 +1,4 @@
-import OTP from '../models/OTPSchema.mjs';
+import OTPSchema from '../models/OTPSchema.mjs';
 import bcrypt from 'bcrypt';
 import User from '../models/User.mjs';
 import sendEmail from './SendOTP.mjs';
@@ -8,7 +8,7 @@ export const VerifyUser = async (req, res, next) => {
     // This verification conditonal statement executes when users submit the registration form
     if (Object.keys(req.body).length !== 0) {
         try {
-            const { otp } = req.body;
+            const otp = req.body.otp.toString();
             const user = req.session.pendingUser; // Retrieve the user from the session
 
             // Session expired
@@ -19,7 +19,7 @@ export const VerifyUser = async (req, res, next) => {
                 });
             }
 
-            const storedOTP = await OTP.findOne({ email: user.email });
+            const storedOTP = await OTPSchema.findOne({ email: user.email });
 
             // OTP expired
             if (!storedOTP) {
@@ -30,6 +30,7 @@ export const VerifyUser = async (req, res, next) => {
             }
 
             const isValidOTP = await bcrypt.compare(otp, storedOTP.otp);
+
             // Check to see if the otp entered matches the one stored in the database
             if (!isValidOTP) {
                 return res.status(400).json({
@@ -42,7 +43,7 @@ export const VerifyUser = async (req, res, next) => {
             await newUser.save();
 
             // Clear up the OTP and session memory
-            await OTP.deleteOne({ email: user.email });
+            await OTPSchema.deleteOne({ email: user.email });
             delete req.session.pendingUser;
 
             // Authenticate the new user
@@ -54,7 +55,7 @@ export const VerifyUser = async (req, res, next) => {
                     })
                 }
 
-                req.login(newUser, (error) => {
+                req.login(newUser, async (error) => {
                     if (error) {
                         console.log("User Login Error: ", error);
                         return res.status(500).json({
@@ -65,6 +66,10 @@ export const VerifyUser = async (req, res, next) => {
 
                     // Redirect the user upon successful authentication
                     newUser.verified = true;
+
+                    // Update the isOnline field to true. This is to track the online status of the user
+                    await User.findByIdAndUpdate(newUser._id, { isOnline: true });
+
                     return res.status(201).json({
                         success: true,
                         message: "User Registration Completed Successfully",
@@ -75,6 +80,7 @@ export const VerifyUser = async (req, res, next) => {
             })(req, res, next);
 
         } catch (error) {
+            console.log(error);
             res.status(500).json({
                 success: false,
                 message: "Registration failed. Please try again.",
@@ -89,10 +95,10 @@ export const VerifyUser = async (req, res, next) => {
         const subject = "Registration Email Verification";
         const message = `Please use the following One Time Password: ${otp}. This OTP will expire in 30seconds.`
 
-        await OTP.deleteOne({ email: user.email });
+        await OTPSchema.deleteMany({ email: user.email });
 
         try {
-            await OTP.create({
+            await OTPSchema.create({
                 email: user.email,
                 otp: await bcrypt.hash(otp, 10)
             });

@@ -11,6 +11,10 @@ import exploreRouter from './routes/explore.mjs';
 import User from './models/User.mjs';
 import mongoose from 'mongoose';
 import { gfs } from './config/gridfs-setup.mjs';
+import http from 'http';
+import { Server } from 'socket.io';
+import SocketHandler from './socket/index.mjs';
+import chatRouter from './routes/chat.mjs';
 
 const app = express();
 
@@ -57,9 +61,12 @@ app.use('/api/retrieve-user-profile/:id', async (req, res, next) => {
     const profileImageUrl = `${baseUrl}/api/retrieve-profileImage/${user.profileImage._id}`;
     return res.status(200).json({
         success: true,
+        user: user._id,
         username: user.username,
         rating: user.rating,
         userProfileImage: profileImageUrl,
+        online: user.isOnline,
+        lastSeen: user.lastSeen,
     })
 })
 
@@ -77,6 +84,21 @@ app.get('/api/retrieve-profileImage/:id', async (req, res) => {
     }
 })
 
-app.listen(3000, () => {
+app.use('/api', chatRouter);
+
+// Create an HTTP server from the Express app
+const server = http.createServer(app);
+
+// Attach Socket.io to the server
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+    },
+});
+
+SocketHandler(io);
+
+server.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });

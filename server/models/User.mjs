@@ -6,7 +6,8 @@ const UserSchema = new mongoose.Schema({
     googleId: {
         type: String,
         required: false,
-        unique: true,
+        default: null,
+        unique: false,
     },
     email: {
         type: String,
@@ -57,7 +58,16 @@ const UserSchema = new mongoose.Schema({
         default: 0,
         min: 0,
         max: 5,
-    }
+    },
+    isOnline: {
+        type: Boolean,
+        default: false,
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now,
+    },
+
 }, {
     timestamps: true
 })

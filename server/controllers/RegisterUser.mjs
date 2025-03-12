@@ -33,6 +33,31 @@ export const RegisterUser = async (req, res) => {
             authProvider: 'local',
         });
 
+
+        const emailExists = await User.exists({ email: newUser.email });
+        const usernameExists = await User.exists({ username: newUser.username });
+        const mobileNumberExists = await User.exists({ mobileNumber: newUser.mobileNumber });
+
+        if (emailExists) {
+            return res.status(400).json({
+                success: false,
+                message: "Email address is already in use",
+                key: 'email',
+            })
+        } else if (usernameExists) {
+            return res.status(400).json({
+                success: false,
+                message: "Username is taken",
+                key: 'username',
+            })
+        } else if (mobileNumberExists) {
+            return res.status(400).json({
+                success: false,
+                message: "Mobile number is already in use",
+                key: 'mobileNumber',
+            })
+        }
+
         req.session.pendingUser = newUser;
 
         const otp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -61,32 +86,6 @@ export const RegisterUser = async (req, res) => {
         });
 
     } catch (error) {
-        if (error.code === 11000) {
-            // The key is essential for attaching the error message to the corresponding 
-            // error object in the react hook form (client)
-            const keys = Object.keys(error.keyPattern);
-            const key = keys[0];
-            if (error.keyValue.email) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Email address is already in use",
-                    key: key,
-                })
-            } else if (error.keyValue.username) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Username is taken",
-                    key: key,
-                })
-            } else if (error.keyValue.mobileNumber) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Mobile number is already in use",
-                    key: key,
-                })
-            }
-        }
-
         res.status(500).json({
             success: false,
             message: "There is something wrong with the server. Please try again later."

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import OTPSchema from "../models/OTPSchema.mjs";
 
 // Create the transporter with your email service configurations
 const transporter = nodemailer.createTransport({
@@ -20,7 +21,6 @@ const sendEmail = async ({ recipient, subject, message }) => {
             html: message       // HTML version
         });
 
-        console.log('Email sent successfully:', result.messageId);
         return result;
     } catch (error) {
         console.error('Error sending email:', error);

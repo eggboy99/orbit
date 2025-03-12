@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  position: relative;
 }
 
 .imagesContainer {

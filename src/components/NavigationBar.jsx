@@ -1,15 +1,51 @@
 import styles from "../assets/css/NavigationBar.module.css";
 import brandLogo from "../assets/images/brand-logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MobileMenuContext from "../context/MobileMenuContext";
 import AuthenticationContext from "../context/AuthenticationContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { RetrieveUserDetails } from "../utils/RetrieveUserDetails.mjs";
+import ProfileIcon from "../assets/images/user-icon-white.svg";
+import ChatIcon from "../assets/images/chat-icon-white.svg";
+import LogoutIcon from "../assets/images/logout-icon-white.svg";
 
 const NavigationBar = () => {
   const { isActive, setIsActive } = useContext(MobileMenuContext);
-  const { isAuthenticated } = useContext(AuthenticationContext);
+  const { isAuthenticated, user, setAuthentication } = useContext(
+    AuthenticationContext
+  );
+
+  const [userProfileImage, setUserProfileImage] = useState("");
+  useEffect(() => {
+    if (user) {
+      const fetchUserProfileDetails = async () => {
+        const userDetails = await RetrieveUserDetails(user);
+        setUserProfileImage(userDetails.userProfileImage);
+      };
+      fetchUserProfileDetails();
+    } else return;
+  }, [user]);
+
   const toggleMenu = () => {
     setIsActive((prevState) => !prevState);
+  };
+
+  const [dropDownActive, setDropDownActive] = useState(false);
+  const handleDropdown = () => {
+    setDropDownActive((previousState) => !previousState);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const request = await fetch("http://localhost:3000/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const response = await request.json();
+    setAuthentication(false);
+    navigate(response.redirect);
   };
 
   return (
@@ -37,15 +73,6 @@ const NavigationBar = () => {
             Explore
           </Link>
         </li>
-        <li>
-          <Link
-            to="/community"
-            className={styles.link}
-            data-testid="community-navigator"
-          >
-            Community
-          </Link>
-        </li>
         <li className={styles.brand}>
           <Link
             to="/"
@@ -63,32 +90,34 @@ const NavigationBar = () => {
           </Link>
         </li>
         <li>
-          <Link
-            to="/news-feed"
-            className={styles.link}
-            data-testid="newsfeed-navigator"
-          >
-            Social Feed
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/articles"
-            className={styles.link}
-            data-testid="articles-navigator"
-          >
-            Articles
-          </Link>
-        </li>
-        <li>
           {isAuthenticated ? (
-            <Link
-              to="/profile"
-              className={styles.link}
-              data-testid="account-navigator"
-            >
-              <button className={styles.loginButton}>Profile</button>{" "}
-            </Link>
+            <>
+              <img
+                src={userProfileImage}
+                alt="Profile Image"
+                className={styles.userProfile}
+                onClick={handleDropdown}
+              />
+
+              <div
+                className={`${styles.dropdownMenuContainer} ${
+                  dropDownActive ? styles.active : ""
+                }`}
+              >
+                <Link className={styles.profile}>
+                  <img src={ProfileIcon} alt="Profile Icon" />
+                  <p>Profile</p>
+                </Link>
+                <Link className={styles.chat}>
+                  <img src={ChatIcon} alt="Chat Icon" />
+                  <p>Chat</p>
+                </Link>
+                <Link className={styles.logout} onClick={handleLogout}>
+                  <img src={LogoutIcon} alt="Logout Icon" />
+                  <p>Logout</p>
+                </Link>
+              </div>
+            </>
           ) : (
             <Link
               to="/authentication"
