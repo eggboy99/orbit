@@ -195,7 +195,7 @@ const Product = () => {
           handleChatContainerState={handleChatContainerState}
           userDetails={userDetails}
           user={user}
-          product={product}
+          productDetails={productDetails}
           userStatus={userStatus}
         />
       </main>

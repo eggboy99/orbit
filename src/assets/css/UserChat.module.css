@@ -1,0 +1,172 @@
+.userChatContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding: 20px 25px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease-in-out;
+  justify-content: space-evenly;
+  position: relative;
+}
+
+.userChatContainer:hover {
+  background-color: #e1e1e1;
+  cursor: default;
+}
+
+.userChatContainer.selected {
+  background-color: #adbbc5;
+}
+
+.recipientProfileImage {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  align-self: center;
+  aspect-ratio: 1 / 1;
+}
+
+.usernameAndMessage {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 50px;
+  gap: 5px;
+}
+.username {
+  font-size: var(--font-size-s);
+  font-weight: var(--font-medium);
+}
+.latestMessage {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.onlineStatusAndOption {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: fit-content;
+  align-items: center;
+}
+
+.online {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: var(--green);
+}
+
+.offline {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: #575c62;
+}
+
+.optionButton {
+  border: none;
+  display: flex;
+  background: none;
+  flex-direction: row;
+  gap: 3px;
+}
+
+.optionDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 100%;
+  background-color: var(--font-black);
+  opacity: 0.9;
+}
+
+.unseenMessages {
+  display: flex;
+  width: 15px;
+  height: 15px;
+  background-color: #a04747;
+  padding: 1em;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  border-radius: 5px;
+}
+
+.unseenMessages p {
+  font-size: var(--font-size-base);
+  font-family: var(--font-Gabarito);
+  color: var(--font-white);
+}
+
+.userChatContainer.smallScreen {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding: 20px 30px;
+  border-radius: 10px;
+  gap: 15px;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: 1px 2px 10px var(--font-black);
+  justify-content: flex-start;
+  position: relative;
+}
+
+.onlineStatusAndOption.smallScreen {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: fit-content;
+  align-items: center;
+  margin-left: auto;
+}
+
+@media (max-width: 580px) and (max-height: 932px), (max-width: 580px) {
+  .userChatContainer {
+    padding: 20px 25px;
+    border-radius: 10px;
+    gap: 10px;
+  }
+
+  .recipientProfileImage {
+    width: 40px;
+    height: 40px;
+  }
+
+  .username {
+    font-size: var(--font-size-base);
+  }
+
+  .onlineStatusAndOption {
+    gap: 10px;
+  }
+
+  .online {
+    width: 7px;
+    height: 7px;
+  }
+
+  .offline {
+    width: 7px;
+    height: 7px;
+  }
+
+  .optionDot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .unseenMessages {
+    padding: 0.8em;
+  }
+
+  .unseenMessages p {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 932px) and (max-height: 580px) {
+}

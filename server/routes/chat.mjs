@@ -15,7 +15,17 @@ chatRouter.get("/chat/messages/:productId/:recipientId/:senderId", async (req, r
             senderId: new mongoose.Types.ObjectId(senderId),
         }).sort({ createdAt: 1 });
 
-        res.json({ success: true, messages })
+        let latestMessage = await Messages.findOne({
+            senderId: senderId,
+            recipientId: recipientId, productId: productId
+        }).sort({ createdAt: -1 });
+
+        if (latestMessage.message) {
+            latestMessage = latestMessage.message;
+        }
+
+
+        res.json({ success: true, messages, latestMessage })
     } catch (error) {
         console.error("Error retrieving chat messages: ", error);
     }
@@ -64,6 +74,12 @@ chatRouter.get('/chat/images/retrieve/:messageId/:imageId', async (req, res, nex
     } catch (error) {
         console.log(error);
     }
+})
+
+chatRouter.get('/chat/get-all-messages/:userId', async (req, res, next) => {
+    const user = req.params.userId;
+    const messages = await Messages.find({ $or: [{ senderId: user }, { recipientId: user }] })
+    return res.status(200).json({ success: true, messages });
 })
 
 export default chatRouter;

@@ -11,6 +11,7 @@ import OTPVerification from "./pages/OTPVerification.jsx";
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx";
 import Explore from "./pages/Explore.jsx";
 import Product from "./pages/Product.jsx";
+import Messages from "./pages/Messages.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/explore/product/:id",
         element: <Product />,
+      },
+      {
+        path: "/messages",
+        element: <Messages />,
       },
     ],
   },

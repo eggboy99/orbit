@@ -57,3 +57,10 @@ html {
     max-width: 820px;
   }
 }
+
+/* IPAD AIR LANDSCAPE RESOLUTION (TROUBLESOME) */
+@media only screen and (min-device-width: 820px) and (max-device-width: 1180px) and (orientation: landscape) {
+  .container {
+    max-width: 1140px;
+  }
+}

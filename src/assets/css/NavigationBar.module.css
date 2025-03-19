@@ -126,6 +126,11 @@ nav {
   width: 32px;
 }
 
+.profile > p,
+.chat > p {
+  transition: color 0.2s ease-in-out;
+}
+
 .profile > p:hover,
 .chat > p:hover {
   color: var(--light-blue);
@@ -206,7 +211,7 @@ nav {
   }
 
   .brandLogo {
-    width: 52px;
+    width: 45px;
     height: auto;
   }
 
@@ -289,6 +294,17 @@ nav {
 
   .dropdownMenuContainer * {
     font-size: var(--font-size-xs);
+  }
+
+  .loginButton {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-semibold);
+  }
+
+  .brandContainer {
+    gap: 0px;
+    font-size: var(--font-size-m);
+    font-weight: var(--font-bold);
   }
 }
 

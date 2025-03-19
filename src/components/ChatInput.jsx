@@ -6,9 +6,15 @@ import { useForm } from "react-hook-form";
 import BlackCloseIcon from "../assets/images/black-close-icon.svg";
 import PropTypes from "prop-types";
 
-const ChatInput = ({ socket, userDetails, product, user, setRefresh }) => {
+const ChatInput = ({
+  socket,
+  userDetails,
+  productDetails,
+  user,
+  selectedChat,
+}) => {
   const sendMessageRef = useRef(null);
-  const [message, setMessage] = useState(""); //
+  const [message, setMessage] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   // Update the message state when user input is received
   const handleMessageInput = (event) => {
@@ -49,7 +55,7 @@ const ChatInput = ({ socket, userDetails, product, user, setRefresh }) => {
       };
 
       reader.readAsDataURL(image);
-      setIsButtonDisabled((previousState) => !previousState);
+      setIsButtonDisabled(false);
       setUploadError("");
     });
   };
@@ -57,18 +63,31 @@ const ChatInput = ({ socket, userDetails, product, user, setRefresh }) => {
   // Remove the image from the preview section when the x button is clicked
   const handleRemoveImage = (indexToRemove) => {
     setPreviewFiles((prevFiles) => {
-      URL.revokeObjectURL(prevFiles[indexToRemove].preview);
       return prevFiles.filter((_, index) => index !== indexToRemove);
     });
-    setIsButtonDisabled((previousState) => !previousState);
+
+    // Ensure that fileInput value is reset to tell the browser to forget which files were previously selected
+    // In this way, when user select the same file again after removing it prior, the browser will still consider it a change
+    // and trigger the onChange event properly
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    if (message !== "") {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
   };
 
   const { handleSubmit } = useForm();
   const handleMessageSubmission = async () => {
-    const productId = product.id;
+    const productId = productDetails._id;
     const senderId = user;
-    const recipientId = userDetails.user;
-
+    let recipientId = userDetails.user;
+    if (senderId === recipientId) {
+      recipientId = selectedChat.senderId;
+    }
     try {
       await fetch(
         `http://localhost:3000/api/chat/uploadImage/${senderId}/${productId}/${recipientId}`,
@@ -90,7 +109,6 @@ const ChatInput = ({ socket, userDetails, product, user, setRefresh }) => {
       setMessage("");
       setPreviewFiles([]);
       setIsButtonDisabled((previousState) => !previousState);
-      setRefresh((previousState) => !previousState);
     } catch (error) {
       console.error("Error uploading images:", error);
     }
@@ -157,9 +175,9 @@ const ChatInput = ({ socket, userDetails, product, user, setRefresh }) => {
 ChatInput.propTypes = {
   socket: PropTypes.object,
   userDetails: PropTypes.object,
-  product: PropTypes.object,
+  productDetails: PropTypes.object,
   user: PropTypes.string,
-  setRefresh: PropTypes.func,
+  selectedChat: PropTypes.object,
 };
 
 export default ChatInput;

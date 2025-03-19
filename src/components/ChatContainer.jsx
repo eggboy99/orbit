@@ -9,10 +9,10 @@ import DateConversion from "../utils/DateConversion.mjs";
 import CalcLastSeen from "../utils/CalcLastSeen.mjs";
 
 const ChatContainer = ({
-  isChatClose,
-  handleChatContainerState,
+  isChatClose = false,
+  handleChatContainerState = () => {},
   userDetails,
-  product,
+  productDetails,
   user,
   userStatus,
 }) => {
@@ -29,42 +29,32 @@ const ChatContainer = ({
   }, [user, socket]);
 
   const [messages, setMessages] = useState([]); // use store the fetched messages from the backend server
-  const [refresh, setRefresh] = useState(false);
-
-  // Fetch the messages data
-  useEffect(() => {
-    if (product.id && userDetails && user) {
-      const fetchMessages = async () => {
-        const request = await fetch(
-          `http://localhost:3000/api/chat/messages/${product.id}/${userDetails.user}/${user}`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        const response = await request.json();
-        setMessages(response.messages);
-      };
-
-      fetchMessages();
-    } else {
-      return;
-    }
-  }, [product.id, userDetails, user, refresh]);
 
   // emit a join room effect and ensuring that the user is joining the correct room
   useEffect(() => {
-    if (socket && user && userDetails && product) {
-      const productId = product.id;
+    if (socket && user && userDetails && productDetails) {
+      const productId = productDetails._id;
       const senderId = user;
       const recipientId = userDetails.user;
       socket.emit("joinRoom", { productId, senderId, recipientId });
+      socket.emit("getChatHistory", { productId, senderId, recipientId });
+      const handleMessageHistory = (messageHistory) => {
+        setMessages(messageHistory);
+      };
+      socket.on("messageHistory", handleMessageHistory);
+      const handleReceiveMessage = (messageData) => {
+        setMessages((previousState) => [...previousState, messageData]);
+      };
+      socket.on("receiveMessage", handleReceiveMessage);
+
+      return () => {
+        socket.off("receiveMessage", handleReceiveMessage);
+        socket.off("messageHistory", handleMessageHistory);
+      };
     } else {
       return;
     }
-  }, [socket, user, userDetails, product]);
+  }, [socket, user, userDetails, productDetails]);
 
   // This reference is for ensuring that the chat container always scrolls to the bottom when there is a message sent / received
   const latestMessageRef = useRef();
@@ -76,7 +66,7 @@ const ChatContainer = ({
         inline: "nearest",
       });
     }
-  }, [messages]);
+  }, [messages, isChatClose]);
 
   return (
     <div
@@ -156,9 +146,8 @@ const ChatContainer = ({
         <ChatInput
           socket={socket}
           userDetails={userDetails}
-          product={product}
+          productDetails={productDetails}
           user={user}
-          setRefresh={setRefresh}
         />
       </div>
     </div>
@@ -169,7 +158,7 @@ ChatContainer.propTypes = {
   isChatClose: PropTypes.bool,
   handleChatContainerState: PropTypes.func,
   userDetails: PropTypes.object,
-  product: PropTypes.object,
+  productDetails: PropTypes.object,
   user: PropTypes.string,
   userStatus: PropTypes.object,
 };

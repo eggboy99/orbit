@@ -69,6 +69,9 @@ const NavigationBar = () => {
             to="/explore"
             className={styles.link}
             data-testid="explore-navigator"
+            onClick={() => {
+              setIsActive(false);
+            }}
           >
             Explore
           </Link>
@@ -108,7 +111,7 @@ const NavigationBar = () => {
                   <img src={ProfileIcon} alt="Profile Icon" />
                   <p>Profile</p>
                 </Link>
-                <Link className={styles.chat}>
+                <Link className={styles.chat} to="/messages">
                   <img src={ChatIcon} alt="Chat Icon" />
                   <p>Chat</p>
                 </Link>
@@ -119,12 +122,8 @@ const NavigationBar = () => {
               </div>
             </>
           ) : (
-            <Link
-              to="/authentication"
-              className={styles.link}
-              data-testid="login-navigator"
-            >
-              <button className={styles.loginButton}>Login</button>{" "}
+            <Link to="/authentication" data-testid="login-navigator">
+              <button className={styles.loginButton}>Login</button>
             </Link>
           )}
         </li>

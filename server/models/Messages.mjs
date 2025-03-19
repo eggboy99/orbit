@@ -18,9 +18,8 @@ const MessageSchema = new mongoose.Schema({
         ref: "Product",
         required: true,
     },
-
     message: {
-        type: String
+        type: String,
     },
 
     images: [{ type: mongoose.Schema.Types.ObjectId, ref: 'images.files' }],
@@ -30,6 +29,13 @@ const MessageSchema = new mongoose.Schema({
     }
 })
 
-MessageSchema.index({ senderId: 1, receiverId: 1, createdAt: -1 });
+MessageSchema.index({ senderId: 1, recipientId: 1, createdAt: -1 });
+MessageSchema.pre('save', function (next) {
+    if (this.message === "" && this.images.length === 0) {
+        next(new Error("Message must contain either text or images"));
+    } else {
+        next();
+    }
+})
 
 export default mongoose.model("Message", MessageSchema);
