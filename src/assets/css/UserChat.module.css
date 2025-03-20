@@ -44,10 +44,10 @@
   white-space: nowrap;
 }
 
-.onlineStatusAndOption {
+.onlineStatusAndDelete {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 10px;
   height: fit-content;
   align-items: center;
 }
@@ -66,20 +66,15 @@
   background-color: #575c62;
 }
 
-.optionButton {
-  border: none;
-  display: flex;
-  background: none;
-  flex-direction: row;
-  gap: 3px;
+.deleteChatButton {
+  width: 32px;
+  height: 32px;
+  z-index: 2;
+  transition: opacity 0.2s ease-in-out;
 }
 
-.optionDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 100%;
-  background-color: var(--font-black);
-  opacity: 0.9;
+.deleteChatButton:hover {
+  opacity: 0.8;
 }
 
 .unseenMessages {
@@ -115,7 +110,7 @@
   position: relative;
 }
 
-.onlineStatusAndOption.smallScreen {
+.onlineStatusAndDelete.smallScreen {
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -140,7 +135,7 @@
     font-size: var(--font-size-base);
   }
 
-  .onlineStatusAndOption {
+  .onlineStatusAndDelete {
     gap: 10px;
   }
 
@@ -154,9 +149,9 @@
     height: 7px;
   }
 
-  .optionDot {
-    width: 5px;
-    height: 5px;
+  .deleteChatButton {
+    width: 20px;
+    height: 20px;
   }
 
   .unseenMessages {
@@ -166,7 +161,4 @@
   .unseenMessages p {
     font-size: var(--font-size-xs);
   }
-}
-
-@media (max-width: 932px) and (max-height: 580px) {
 }

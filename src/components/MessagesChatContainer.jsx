@@ -13,8 +13,6 @@ const MessagesChatContainer = ({
   recipientId,
   username,
   productId,
-  online,
-  lastSeen,
   selectedChat,
   socket,
   isLargeScreen,
@@ -90,6 +88,29 @@ const MessagesChatContainer = ({
       });
     }
   }, [messages]);
+
+  // Update the MessagesChatContainer online status effect
+  const [online, setOnline] = useState(false);
+  const [lastSeen, setLastSeen] = useState(null);
+
+  useEffect(() => {
+    if (!socket || !senderId) return;
+    socket.emit("getOnlineStatus", { userId: senderId });
+    const handleStatusUpdate = (data) => {
+      if (data.userId === senderId) {
+        setOnline(data.onlineStatus);
+        setLastSeen(data.lastSeen);
+      }
+    };
+
+    socket.on("retrieveOnlineStatus", handleStatusUpdate);
+    socket.on("userStatusChange", handleStatusUpdate);
+
+    return () => {
+      socket.off("retrieveOnlineStatus", handleStatusUpdate);
+      socket.off("userStatusChange", handleStatusUpdate);
+    };
+  }, [socket, senderId]);
 
   return (
     <>
@@ -176,8 +197,6 @@ MessagesChatContainer.propTypes = {
   recipientId: PropTypes.string,
   username: PropTypes.string,
   productId: PropTypes.string,
-  online: PropTypes.bool,
-  lastSeen: PropTypes.string,
   selectedChat: PropTypes.object,
   socket: PropTypes.object,
   isLargeScreen: PropTypes.bool,

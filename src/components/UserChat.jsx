@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "../assets/css/UserChat.module.css";
 import PropTypes from "prop-types";
+import DeleteIcon from "../assets/images/delete-icon.svg";
 
 const UserChat = ({
   senderId,
   recipientId,
   username,
   profileImage,
-  online,
   product,
   handleChatSelection,
   selectedChat,
@@ -15,6 +15,7 @@ const UserChat = ({
   socket,
   setIsChatOpen,
   user,
+  deleteChat,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
@@ -103,6 +104,25 @@ const UserChat = ({
     }
   }, [socket, user, senderId, recipientId, product]);
 
+  const [online, setOnline] = useState(false);
+
+  useEffect(() => {
+    if (!socket || !senderId) return;
+    socket.emit("getOnlineStatus", { userId: senderId });
+    const handleStatusUpdate = (data) => {
+      if (data.userId === senderId) {
+        setOnline(data.onlineStatus);
+      }
+    };
+    socket.on("retrieveOnlineStatus", handleStatusUpdate);
+    socket.on("userStatusChange", handleStatusUpdate);
+
+    return () => {
+      socket.off("retrieveOnlineStatus", handleStatusUpdate);
+      socket.off("userStatusChange", handleStatusUpdate);
+    };
+  }, [socket, senderId]);
+
   return (
     <div
       className={`${styles.userChatContainer} ${
@@ -127,16 +147,20 @@ const UserChat = ({
         </p>
       </div>
       <div
-        className={`${styles.onlineStatusAndOption} ${
+        className={`${styles.onlineStatusAndDelete} ${
           !isLargeScreen ? styles.smallScreen : ""
         }`}
       >
         <span className={online ? styles.online : styles.offline}></span>
-        <button className={styles.optionButton}>
-          <span className={styles.optionDot}></span>
-          <span className={styles.optionDot}></span>
-          <span className={styles.optionDot}></span>
-        </button>
+        <img
+          src={DeleteIcon}
+          alt="Delete Chat Icon"
+          className={styles.deleteChatButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteChat();
+          }}
+        />
       </div>
     </div>
   );
@@ -147,7 +171,6 @@ UserChat.propTypes = {
   recipientId: PropTypes.string,
   username: PropTypes.string,
   profileImage: PropTypes.string,
-  online: PropTypes.bool,
   product: PropTypes.string,
   handleChatSelection: PropTypes.func,
   selectedChat: PropTypes.object,
@@ -155,6 +178,7 @@ UserChat.propTypes = {
   user: PropTypes.string,
   isLargeScreen: PropTypes.bool,
   setIsChatOpen: PropTypes.func,
+  deleteChat: PropTypes.func,
 };
 
 export default UserChat;

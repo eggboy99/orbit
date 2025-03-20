@@ -95,7 +95,7 @@ nav {
 }
 
 .dropdownMenuContainer.active {
-  z-index: 2;
+  z-index: 5;
   opacity: 1;
 }
 

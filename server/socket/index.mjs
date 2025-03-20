@@ -1,9 +1,28 @@
 import socketAuth from "./middlewares/socketAuth.mjs";
 import Message from "../models/Messages.mjs";
+import User from "../models/User.mjs";
+import mongoose from "mongoose";
 
 export default (io) => {
     io.use(socketAuth);
+    const connectedUsers = new Map();
     io.on("connection", async (socket) => {
+        if (socket.user && socket.user._id) {
+            await User.findByIdAndUpdate(socket.user._id, {
+                isOnline: true,
+                lastSeen: new Date()
+            });
+
+            if (!connectedUsers.has(socket.user._id)) {
+                connectedUsers.set(socket.user._id, new Set());
+            }
+            connectedUsers.get(socket.user._id).add(socket.id);
+            io.emit('userStatusChange', {
+                userId: socket.user._id,
+                onlineStatus: true,
+                lastSeen: null
+            });
+        }
         socket.on('joinAllRooms', async ({ user }) => {
             const messages = await Message.find({
                 $or: [
@@ -17,7 +36,7 @@ export default (io) => {
                 const productId = message.productId;
                 let room = [senderId, recipientId].sort();
                 room = `${room[0]}-${room[1]}-${productId}`;
-                console.log(`User: ${socket.user.username} joined room: ${room}`);
+                // console.log(`User: ${socket.user.username} joined room: ${room}`);
                 socket.join(room);
             })
 
@@ -25,7 +44,7 @@ export default (io) => {
         socket.on("joinRoom", async ({ productId, senderId, recipientId }) => {
             let room = [senderId, recipientId].sort();
             room = `${room[0]}-${room[1]}-${productId}`;
-            console.log(`User: ${socket.user.username} joined room: ${room}`)
+            // console.log(`User: ${socket.user.username} joined room: ${room}`)
             socket.join(room);
         })
 
@@ -47,7 +66,6 @@ export default (io) => {
                 socket.join(room);
                 console.log(`Message: ${updatedMessage} sent to room: ${room}`);
                 io.to(room).emit('receiveMessage', updatedMessage);
-                console.log("Message emitted successfully.");
             } catch (error) {
                 console.error("Error saving message: ", error);
             }
@@ -65,7 +83,6 @@ export default (io) => {
 
                 let room = [senderId, recipientId].sort();
                 room = `${room[0]}-${room[1]}-${productId}`;
-                console.log(`Retrieve message from room: ${room}`)
                 socket.join(room);
                 io.to(room).emit('messageHistory', messages);
             } catch (error) {
@@ -73,8 +90,33 @@ export default (io) => {
             }
         })
 
+        socket.on('getOnlineStatus', async ({ userId }) => {
+            const user = await User.findById(userId);
+            const onlineStatus = user.isOnline;
+            const lastSeen = user.lastSeen
+            io.emit('retrieveOnlineStatus', { userId: userId, onlineStatus: onlineStatus, lastSeen: lastSeen });
+        })
+
         socket.on("disconnect", async (reason) => {
-            console.log(`User: ${socket.user.username} disconnected.`);
+            if (socket.user && socket.user._id) {
+                if (connectedUsers.has(socket.user._id)) {
+                    connectedUsers.get(socket.user._id).delete(socket.id);
+
+                    if (connectedUsers.get(socket.user._id).size === 0) {
+                        connectedUsers.delete(socket.user._id);
+                        const now = new Date();
+                        await User.findByIdAndUpdate(socket.user._id, {
+                            isOnline: false,
+                            lastSeen: now
+                        });
+                        io.emit('userStatusChange', {
+                            userId: socket.user._id,
+                            onlineStatus: false,
+                            lastSeen: now
+                        });
+                    }
+                }
+            }
         });
 
     })

@@ -29,8 +29,12 @@ const Messages = () => {
           );
 
           const response = await request.json();
+          // Sort the messages before assigning it to the group.message
+          const sortedMessages = [...response.messages].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
           const newGroups = {};
-          for (const message of response.messages) {
+          for (const message of sortedMessages) {
             let room = [message.senderId, message.recipientId].sort();
             room = `${room[0]}-${room[1]}-${message.productId}`;
             if (!newGroups[room]) {
@@ -49,8 +53,7 @@ const Messages = () => {
 
               const fetchUserDetailsResponse =
                 await fetchUserDetailsRequest.json();
-              const { username, online, lastSeen, userProfileImage } =
-                fetchUserDetailsResponse;
+              const { username, userProfileImage } = fetchUserDetailsResponse;
               newGroups[room] = {
                 username,
                 senderId: message.senderId,
@@ -59,8 +62,6 @@ const Messages = () => {
                 messageCreation: message.createdAt,
                 message: message.message,
                 profileImage: userProfileImage,
-                online,
-                lastSeen,
               };
             }
           }
@@ -72,7 +73,7 @@ const Messages = () => {
 
       fetchUsersMessages();
     }
-  }, [user]);
+  }, [user, groups]);
 
   const [selectedChat, setSelectedChat] = useState(null);
 
@@ -98,9 +99,11 @@ const Messages = () => {
   // use to set the default chat selection (which is the latest chat)
   useEffect(() => {
     if (groups && Object.keys(groups).length > 0) {
+      // console.log(groups);
       const groupsArr = Object.values(groups);
       if (groupsArr.length > 0) {
         const mostRecentMessage = groupsArr.reduce((latest, current) => {
+          // console.log("Latest:", latest, "Current", current);
           return new Date(current.messageCreation) >
             new Date(latest.messageCreation)
             ? current
@@ -114,13 +117,11 @@ const Messages = () => {
             message: mostRecentMessage.message,
             productId: mostRecentMessage.productId,
             profileImage: mostRecentMessage.profileImage,
-            online: mostRecentMessage.online,
-            lastSeen: mostRecentMessage.lastSeen,
           });
         }
       }
     }
-  }, [groups, selectedChat, socket, user]);
+  }, [groups, user, selectedChat]);
 
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1280);
 
@@ -138,10 +139,63 @@ const Messages = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const deleteChat = async (senderId, recipientId, productId) => {
+    const request = await fetch("http://localhost:3000/api/chat/delete-chat", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        senderId: senderId,
+        recipientId: recipientId,
+        productId: productId,
+      }),
+    });
+
+    const response = await request.json();
+    const sortedMessages = [...response.messages].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    const newGroups = {};
+    for (const message of sortedMessages) {
+      let room = [message.senderId, message.recipientId].sort();
+      room = `${room[0]}-${room[1]}-${message.productId}`;
+      if (!newGroups[room]) {
+        const fetchUserDetailsRequest = await fetch(
+          `http://localhost:3000/api/retrieve-user-profile/${
+            message.recipientId === user
+              ? message.senderId
+              : message.recipientId
+          }`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const fetchUserDetailsResponse = await fetchUserDetailsRequest.json();
+        const { username, userProfileImage } = fetchUserDetailsResponse;
+        newGroups[room] = {
+          username,
+          senderId: message.senderId,
+          recipientId: message.recipientId,
+          productId: message.productId,
+          messageCreation: message.createdAt,
+          message: message.message,
+          profileImage: userProfileImage,
+        };
+      }
+    }
+    setGroups(newGroups);
+  };
+
   return (
     <>
       <NavigationBar />
-      {isActive ? null : (
+
+      {isActive ? null : groups && Object.values(groups).length === 0 ? (
+        <h1 className={styles.emptyMessage}>Your message inbox is empty</h1>
+      ) : (
         <main className={styles.chatContainer}>
           <div
             className={`${styles.messagesContainer} ${
@@ -160,8 +214,6 @@ const Messages = () => {
                     recipientId={selectedChat.recipientId}
                     productId={selectedChat.productId}
                     username={selectedChat.username}
-                    online={selectedChat.online}
-                    lastSeen={selectedChat.lastSeen}
                     selectedChat={selectedChat}
                     setSelectedChat={setSelectedChat}
                     socket={socket}
@@ -189,7 +241,6 @@ const Messages = () => {
                       username={group.username}
                       profileImage={group.profileImage}
                       product={group.productId}
-                      online={group.online}
                       latestMessage={group.message}
                       selectedChat={selectedChat}
                       handleChatSelection={() =>
@@ -208,6 +259,13 @@ const Messages = () => {
                       isLargeScreen={isLargeScreen}
                       setIsChatOpen={setIsChatOpen}
                       key={index}
+                      deleteChat={() =>
+                        deleteChat(
+                          group.senderId,
+                          group.recipientId,
+                          group.productId
+                        )
+                      }
                     />
                   );
                 })}
