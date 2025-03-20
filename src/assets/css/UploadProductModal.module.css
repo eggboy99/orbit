@@ -20,7 +20,7 @@ input[type="text"] {
   transform: translateY(0px);
   opacity: 1;
   margin: auto;
-  z-index: 2;
+  z-index: 4;
 }
 
 .closeModalButton {

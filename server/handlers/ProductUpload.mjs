@@ -35,10 +35,13 @@ export const ProductUpload = async (req, res, next) => {
 
     try {
         await newProduct.save();
+        const request = await fetch(`http://localhost:3000/api/explore/retrieve-product/${newProduct._id}`)
+        const response = await request.json();
+        const product = response.product
         return res.status(200).json({
             success: true,
             message: 'Product upload successfully!',
-            body: newProduct,
+            body: product,
         })
     } catch (error) {
         console.log(error);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "../assets/css/UserChat.module.css";
 import PropTypes from "prop-types";
 import DeleteIcon from "../assets/images/delete-icon.svg";
+import { useNavigate } from "react-router-dom";
 
 const UserChat = ({
   senderId,
@@ -123,6 +124,11 @@ const UserChat = ({
     };
   }, [socket, senderId]);
 
+  const navigate = useNavigate();
+  const handleNavigateUserProfile = () => {
+    navigate(`/profile/${user}`);
+  };
+
   return (
     <div
       className={`${styles.userChatContainer} ${
@@ -139,6 +145,10 @@ const UserChat = ({
         src={profileImage}
         alt="Recipient Profile Image"
         className={styles.recipientProfileImage}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNavigateUserProfile();
+        }}
       />
       <div className={styles.usernameAndMessage}>
         <p className={styles.username}>{username}</p>

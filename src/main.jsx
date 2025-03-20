@@ -12,6 +12,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes.jsx";
 import Explore from "./pages/Explore.jsx";
 import Product from "./pages/Product.jsx";
 import Messages from "./pages/Messages.jsx";
+import MyProfile from "./pages/MyProfile.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/messages",
         element: <Messages />,
+      },
+      {
+        path: "/profile/:id",
+        element: <MyProfile />,
       },
     ],
   },

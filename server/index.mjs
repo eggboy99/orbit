@@ -15,6 +15,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import SocketHandler from './socket/index.mjs';
 import chatRouter from './routes/chat.mjs';
+import Products from './models/Products.mjs';
 
 const app = express();
 
@@ -82,6 +83,16 @@ app.get('/api/retrieve-profileImage/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+})
+
+app.get('/api/get-number-of-listings/:id', async (req, res) => {
+    const user = req.params.id;
+    const products = await Products.find({ user: user });
+    return res.status(200).json({
+        success: true,
+        numberOfProducts: products.length,
+    })
+
 })
 
 app.use('/api', chatRouter);

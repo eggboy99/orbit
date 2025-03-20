@@ -7,6 +7,7 @@ import { RetrieveProduct } from "../handlers/RetrieveProduct.mjs";
 import mongoose from "mongoose";
 import { gfs } from "../config/gridfs-setup.mjs";
 import { SaveProduct } from "../handlers/SaveProduct.mjs";
+import Products from "../models/Products.mjs";
 
 const exploreRouter = Router();
 
@@ -30,5 +31,21 @@ exploreRouter.get('/explore/images/:id', async (req, res) => {
 
 exploreRouter.post('/explore/upload-product', ProductUpload);
 exploreRouter.post('/explore/save-product', SaveProduct);
+exploreRouter.post('/explore/delete-product/:id', async (req, res) => {
+    const productId = req.params.id;
+    try {
+        await Products.deleteOne({ _id: productId });
+        const products = await Products.find({ _id: productId })
+        return res.status(200).json({
+            success: true,
+            products: products,
+        })
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            error: error,
+        })
+    }
+})
 
 export default exploreRouter;

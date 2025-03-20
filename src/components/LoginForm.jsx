@@ -75,9 +75,9 @@ const Form = ({ formInputs, buttons, testId }) => {
           );
         })}
 
-        <Link to="/reset-password" className={styles.forgotPassword}>
+        {/* <Link to="/reset-password" className={styles.forgotPassword}>
           Forgot your password?
-        </Link>
+        </Link> */}
       </div>
 
       <div className={styles.buttonsContainer}>

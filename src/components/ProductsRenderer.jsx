@@ -1,17 +1,18 @@
-import { useEffect, useState, useContext, useMemo } from "react";
+import { useEffect, useContext, useMemo } from "react";
 import styles from "../assets/css/ProductsRenderer.module.css";
 import AuthenticationContext from "../context/AuthenticationContext";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import DeleteIcon from "../assets/images/delete-icon.svg";
 
 const ProductsRenderer = ({
   searchValue,
   categorySelection,
   locationSelection,
   conditionSelection,
+  products,
+  setProducts,
 }) => {
-  const [products, setProducts] = useState([]);
-
   const { user, checkAuthStatus } = useContext(AuthenticationContext);
   checkAuthStatus();
 
@@ -114,6 +115,21 @@ const ProductsRenderer = ({
     navigate(`/explore/product/${productId}`);
   };
 
+  const handleProductDeletion = async (productId) => {
+    const deleteRequest = await fetch(
+      `http://localhost:3000/api/explore/delete-product/${productId}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    if (deleteRequest.ok) {
+      const deleteResponse = await deleteRequest.json();
+      setProducts(deleteResponse.products);
+    }
+  };
+
   return (
     <div className={styles.productsContainer}>
       {products != null &&
@@ -130,30 +146,42 @@ const ProductsRenderer = ({
             />
             <div className={styles.nameContainer}>
               <h2 className={styles.productName}>{product.name}</h2>
-              <div className={styles.savedContainer}>
-                <p>{product.saved.length}</p>
-                {product.saved.find((userId) => userId === user) ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={styles.bookmark}
-                    viewBox="0 -960 960 960"
-                    fill="#fcbf49"
-                    onClick={() => handleSaveProduct(product._id)}
-                  >
-                    <path d="M200-120v-665q0-24 18-42t42-18h440q24 0 42 18t18 42v665L480-240 200-120Z" />
-                  </svg>
-                ) : (
-                  <svg
-                    className={styles.bookmark}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 -960 960 960"
-                    fill="#222222"
-                    onClick={() => handleSaveProduct(product._id)}
-                  >
-                    <path d="M200-120v-665q0-24 18-42t42-18h440q24 0 42 18t18 42v665L480-240 200-120Zm60-91 220-93 220 93v-574H260v574Zm0-574h440-440Z" />
-                  </svg>
-                )}
-              </div>
+              {user !== product.user ? (
+                <div className={styles.savedContainer}>
+                  <p>{product.saved.length}</p>
+                  {product.saved.find((userId) => userId === user) ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={styles.bookmark}
+                      viewBox="0 -960 960 960"
+                      fill="#fcbf49"
+                      onClick={() => handleSaveProduct(product._id)}
+                    >
+                      <path d="M200-120v-665q0-24 18-42t42-18h440q24 0 42 18t18 42v665L480-240 200-120Z" />
+                    </svg>
+                  ) : (
+                    <svg
+                      className={styles.bookmark}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 -960 960 960"
+                      fill="#222222"
+                      onClick={() => handleSaveProduct(product._id)}
+                    >
+                      <path d="M200-120v-665q0-24 18-42t42-18h440q24 0 42 18t18 42v665L480-240 200-120Zm60-91 220-93 220 93v-574H260v574Zm0-574h440-440Z" />
+                    </svg>
+                  )}
+                </div>
+              ) : (
+                <img
+                  className={styles.deleteProductButton}
+                  src={DeleteIcon}
+                  alt="Delete Product Button Icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProductDeletion(product._id);
+                  }}
+                />
+              )}
             </div>
 
             <p
@@ -181,6 +209,8 @@ ProductsRenderer.propTypes = {
   categorySelection: PropTypes.string,
   locationSelection: PropTypes.string,
   conditionSelection: PropTypes.string,
+  products: PropTypes.array,
+  setProducts: PropTypes.func,
 };
 
 export default ProductsRenderer;

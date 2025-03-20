@@ -8,7 +8,7 @@ import { useState, useContext } from "react";
 import CloseIcon from "../assets/images/white-close-icon.svg";
 import AuthenticationContext from "../context/AuthenticationContext";
 
-const UploadProductModal = ({ isModalToggled, toggleModal }) => {
+const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
   const { user } = useContext(AuthenticationContext);
 
   const [categories, setCategories] = useState([]);
@@ -109,6 +109,7 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
     const response = await request.json();
     if (response.success) {
       toggleModal((previousState) => !previousState);
+      setProducts((previousState) => [...previousState, response.body]);
     }
   };
 
@@ -296,6 +297,7 @@ const UploadProductModal = ({ isModalToggled, toggleModal }) => {
 UploadProductModal.propTypes = {
   isModalToggled: PropTypes.bool,
   toggleModal: PropTypes.func,
+  setProducts: PropTypes.func,
 };
 
 export default UploadProductModal;

@@ -7,9 +7,11 @@ import DateConversion from "../utils/DateConversion.mjs";
 import { RetrieveUserDetails } from "../utils/RetrieveUserDetails.mjs";
 import UserRating from "../components/UserRating";
 import ChatContainer from "../components/ChatContainer";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
   const { checkAuthStatus, user } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkAuthStatus();
@@ -108,6 +110,10 @@ const Product = () => {
     }
   }, [isChatClose]);
 
+  const handleNavigateUserProfile = () => {
+    navigate(`/profile/${user}`);
+  };
+
   return (
     <>
       <NavigationBar />
@@ -143,6 +149,7 @@ const Product = () => {
               src={userDetails && userDetails.userProfileImage}
               alt="User Profile Image"
               className={styles.userProfileImage}
+              onClick={handleNavigateUserProfile}
             />
             <div>
               <p>{userDetails && userDetails.username}</p>

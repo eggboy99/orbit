@@ -107,7 +107,7 @@ const NavigationBar = () => {
                   dropDownActive ? styles.active : ""
                 }`}
               >
-                <Link className={styles.profile}>
+                <Link className={styles.profile} to={`/profile/${user}`}>
                   <img src={ProfileIcon} alt="Profile Icon" />
                   <p>Profile</p>
                 </Link>

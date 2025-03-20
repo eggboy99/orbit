@@ -1,24 +1,56 @@
 import NavigationBar from "../components/NavigationBar";
+import AuthenticationContext from "../context/AuthenticationContext";
 import MobileMenuContext from "../context/MobileMenuContext";
-import { useContext, useRef, useState } from "react";
-import styles from "../assets/css/Explore.module.css";
-import SearchBar from "../components/SearchBar";
-import FilterIcon from "../assets/images/filter-icon.svg";
-import UploadIcon from "../assets/images/upload-icon.svg";
-import UploadProductModal from "../components/UploadProductModal";
+import { useState, useContext, useEffect, useRef } from "react";
+import styles from "../assets/css/MyProfile.module.css";
 import CategorySelector from "../components/CategorySelector";
 import LocationSelector from "../components/LocationSelector";
 import ProductsRenderer from "../components/ProductsRenderer";
+import SearchBar from "../components/SearchBar";
+import FilterIcon from "../assets/images/filter-icon.svg";
 
-const Explore = () => {
+const MyProfile = () => {
+  const { checkAuthStatus, user } = useContext(AuthenticationContext);
   const { isActive } = useContext(MobileMenuContext);
-  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
-  // Handle upload product toggle modal
-  const [isModalToggled, toggleModal] = useState(false);
-  const handleToggleModal = () => {
-    toggleModal((previousState) => !previousState);
-  };
+  const [userDetails, setUserDetails] = useState(null);
+  useEffect(() => {
+    if (user) {
+      const fetchAllUserData = async () => {
+        try {
+          const userDetailsRequest = await fetch(
+            `http://localhost:3000/api/retrieve-user-profile/${user}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const userDetailsResponse = await userDetailsRequest.json();
+          const listingsRequest = await fetch(
+            `http://localhost:3000/api/get-number-of-listings/${user}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const listingsResponse = await listingsRequest.json();
+          setUserDetails({
+            ...userDetailsResponse,
+            numberOfListings: listingsResponse.numberOfProducts,
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+      fetchAllUserData();
+    }
+  }, [user]);
 
   // Categories filter utilities
   const [categories, setCategories] = useState([]);
@@ -109,24 +141,28 @@ const Explore = () => {
   };
 
   const [searchValue, setSearchValue] = useState("");
+  const [products, setProducts] = useState([]);
 
   return (
     <>
-      <nav>
-        <NavigationBar />
-      </nav>
+      <NavigationBar />
       {isActive ? null : (
-        <main>
-          <button className={styles.uploadButton} onClick={handleToggleModal}>
-            Upload
-            <img src={UploadIcon} alt="Upload Icon" />
-          </button>
-          <UploadProductModal
-            isModalToggled={isModalToggled}
-            toggleModal={toggleModal}
-            products={products}
-            setProducts={setProducts}
-          />
+        <main className={styles.profilePageContainer}>
+          <div className={styles.profileContainer}>
+            <img
+              src={userDetails && userDetails.userProfileImage}
+              alt="User Profile Image"
+              className={styles.userProfileImage}
+            />
+            <div className={styles.nameAndNumberOfListings}>
+              <h1 className={styles.username}>
+                {userDetails && userDetails.username}
+              </h1>
+              <p className={styles.numberOfListings}>
+                {userDetails && userDetails.numberOfListings} listings
+              </p>
+            </div>
+          </div>
           <div className={styles.searchToolsContainer}>
             <SearchBar setSearchValue={setSearchValue} />
             <div className={styles.filterContainer}>
@@ -258,4 +294,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default MyProfile;

@@ -58,6 +58,11 @@
   height: 64px;
   object-fit: cover;
   border-radius: 100%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.userProfileImage:hover {
+  transform: scale(1.03);
 }
 
 .userContainer p {

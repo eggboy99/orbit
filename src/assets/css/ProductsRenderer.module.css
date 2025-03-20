@@ -51,6 +51,17 @@
   font-size: var(--font-size-s);
 }
 
+.deleteProductButton {
+  width: 32px;
+  height: 32px;
+  z-index: 2;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.deleteProductButton:hover {
+  opacity: 0.8;
+}
+
 .productName {
   font-weight: var(--font-bold);
   font-size: var(--font-size-s);
@@ -117,6 +128,10 @@
   .productContainer {
     font-size: var(--font-size-xs);
   }
+  .deleteProductButton {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @media (max-width: 932px) and (max-height: 430px) {
@@ -138,5 +153,10 @@
   .productCondition,
   .productContainer {
     font-size: var(--font-size-xs);
+  }
+
+  .deleteProductButton {
+    width: 20px;
+    height: 20px;
   }
 }
