@@ -2,8 +2,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/User.mjs';
 import passport from "passport";
 
-const GOOGLE_CLIENT_ID = '1025742128089-69k2ukrhscolm4jifsikhgosjkjgvrhg.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = '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';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
