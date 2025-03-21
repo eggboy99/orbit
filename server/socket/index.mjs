@@ -92,9 +92,11 @@ export default (io) => {
 
         socket.on('getOnlineStatus', async ({ userId }) => {
             const user = await User.findById(userId);
-            const onlineStatus = user.isOnline;
-            const lastSeen = user.lastSeen
-            io.emit('retrieveOnlineStatus', { userId: userId, onlineStatus: onlineStatus, lastSeen: lastSeen });
+            if (user) {
+                const onlineStatus = user.isOnline;
+                const lastSeen = user.lastSeen
+                io.emit('retrieveOnlineStatus', { userId: userId, onlineStatus: onlineStatus, lastSeen: lastSeen });
+            }
         })
 
         socket.on("disconnect", async (reason) => {

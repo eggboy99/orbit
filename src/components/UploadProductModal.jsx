@@ -18,6 +18,9 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
   const [subCategorySelection, setSubCategorySelection] = useState(null);
   const handleSubCategorySelection = (event) => {
     setSubCategorySelection(event.target.textContent);
+    if (errors.subCategory) {
+      clearErrors("subCategory");
+    }
   };
 
   // Locations filter utilites
@@ -28,12 +31,18 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
   const [subZoneSelection, setSubZoneSelection] = useState(null);
   const handleSubZoneSelection = (event) => {
     setSubZoneSelection(event.target.textContent);
+    if (errors.subZone) {
+      clearErrors("subZone");
+    }
   };
 
   const [conditionSelection, setConditionSelection] = useState(null);
   const handleConditionSelection = (event) => {
     const selection = event.target.textContent;
     setConditionSelection(selection);
+    if (errors.condition) {
+      clearErrors("condition");
+    }
   };
 
   const {
@@ -42,6 +51,7 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
     register,
     setValue,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
@@ -54,6 +64,7 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
     });
   };
 
+  const [previewFiles, setPreviewFiles] = useState([]);
   const onSubmit = async (data) => {
     if (
       subCategorySelection === null &&
@@ -83,7 +94,9 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
     }
 
     data.category = categorySelection;
+    data.subCategory = subCategorySelection;
     data.location = locationSelection;
+    data.subZone = subZoneSelection;
     data.condition = conditionSelection;
     data.userId = user;
 
@@ -110,6 +123,13 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
     if (response.success) {
       toggleModal((previousState) => !previousState);
       setProducts((previousState) => [...previousState, response.body]);
+      setCategorySelection("Choose Category");
+      setLocationSelection("Choose Location");
+      setSubZoneSelection(null);
+      setConditionSelection(null);
+      setValue("productName", "");
+      setValue("productName", "");
+      setPreviewFiles([]);
     }
   };
 
@@ -146,6 +166,8 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
               value={value}
               error={errors.images && errors.images.message}
               setValue={setValue}
+              previewFiles={previewFiles}
+              setPreviewFiles={setPreviewFiles}
             />
           )}
         />
@@ -192,6 +214,8 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
               setCategoryDropdownActive={setCategoryDropdownActive}
               setLocationDropdownActive={setLocationDropdownActive}
               variant="upload"
+              errors={errors}
+              clearErrors={clearErrors}
             />
             <div className={styles.subCategoriesContainer}>
               {categories
@@ -227,6 +251,8 @@ const UploadProductModal = ({ isModalToggled, toggleModal, setProducts }) => {
               setLocationSelection={setLocationSelection}
               setCategoryDropdownActive={setCategoryDropdownActive}
               variant="upload"
+              errors={errors}
+              clearErrors={clearErrors}
             />
             <div className={styles.subZonesContainer}>
               {locations

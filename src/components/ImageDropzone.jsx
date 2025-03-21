@@ -5,8 +5,13 @@ import ImageIcon from "../assets/images/image-icon.svg";
 import PropTypes from "prop-types";
 import BlackCloseIcon from "../assets/images/black-close-icon.svg";
 
-const ImageDropzone = ({ onChange, error, setValue }) => {
-  const [previewFiles, setPreviewFiles] = useState([]);
+const ImageDropzone = ({
+  onChange,
+  error,
+  setValue,
+  previewFiles,
+  setPreviewFiles,
+}) => {
   const [fileError, setFileError] = useState([]);
 
   // Handle the after effect of users uploading the file
@@ -126,6 +131,9 @@ ImageDropzone.propTypes = {
   onChange: PropTypes.func,
   setValue: PropTypes.func,
   error: PropTypes.string,
+  onSubmit: PropTypes.func,
+  previewFiles: PropTypes.array,
+  setPreviewFiles: PropTypes.func,
 };
 
 export default ImageDropzone;

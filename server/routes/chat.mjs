@@ -86,7 +86,12 @@ chatRouter.all('/chat/delete-chat', async (req, res) => {
     const { senderId, recipientId, productId } = req.body;
     console.log(req.body);
     try {
-        await Messages.deleteMany({ senderId: senderId, recipientId: recipientId, productId: productId });
+        await Messages.deleteMany({
+            $or: [
+                { senderId: senderId, recipientId: recipientId, productId: productId },
+                { senderId: recipientId, recipientId: senderId, productId: productId }
+            ]
+        });
         const updatedMessages = await Messages.find({}).sort({ createdAt: -1 });
         return res.status(200).json({
             success: true,
